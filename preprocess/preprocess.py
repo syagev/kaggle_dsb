@@ -12,8 +12,8 @@ from skimage import measure, morphology
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 # Some constants 
-INPUT_FOLDER = "C:/DATA/projects/kaggle/data/sample_images"
-OUTPUT_FOLDER = "C:/DATA/projects/kaggle/data/sample_images_processed"
+INPUT_FOLDER = "/razberry/datasets/kaggle-dsb2017/stage1"
+OUTPUT_FOLDER = "/razberry/datasets/kaggle-dsb2017/stage1_processed"
 patients = os.listdir(INPUT_FOLDER)
 patients.sort()
 
