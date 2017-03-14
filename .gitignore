@@ -1,1 +1,5 @@
 /.vscode
+/.vs
+*__pycache__*
+*.pyproj
+*.sln
