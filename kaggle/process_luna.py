@@ -7,14 +7,12 @@ import SimpleITK as sitk    # for reading LUNA2016 mhd files
 import numpy as np
 import h5py
 import scipy.ndimage
-import kaggle.train as kgtrain     # for normalize_hu, RAND_SEED
 
 PATH_CANDIDATES_CSV = "/razberry/datasets/luna16/candidates.csv"
 PATH_DATA = "/razberry/datasets/luna16"
 RATIO_NEG_TO_POS = 2
 PATH_OUTPUT = "/razberry/datasets/kaggle-dsb2017/luna2016_processed"
 SZ_CUBE = 54
-RAND_SEED = kgtrain.RAND_SEED
 
 def get_candidates():
 
@@ -121,81 +119,34 @@ def gen_candidates(ct_scan, world_2_voxel, candidates):
     save_crop_to_file("0.h5", crops[:, :, :, np.logical_not(is_pos)])
     save_crop_to_file("1.h5", crops[:, :, :, is_pos])
 
-def luna_generator(d0, d1, batch_size=8, ids=None):
-    """Generates batches for training and validation from LUNA2016 set.
+#### Iterate candidates and extract samples
+#d0, d1 = get_candidates()
+#i = 0
+#for id in d1:
 
-    Args:
-        d0, d1: dictionaries for non-class/class resp. key is patient id
-        batch_size: required batch size (default 8)
-        ids: use these scan IDs (for train/val split)
+#    i += 1
+#    print("*** Processing {}/{}".format(i, len(d1)))
 
-    Returns:
-        (data, labels): batch with data and labels
-    """
+#    try:
 
-    np.random.seed(RAND_SEED)
-
-    # construct the samples tuples (patient_id, label, idx)
-    def load_samples(d, label):
-        with h5py.File(os.path.join(PATH_OUTPUT, "{}.h5".format(label))) as f:
-            return [(entry[0], label, i)
-                    for i in range(0, f[entry[0]].shape[-1])
-                    for entry in d if entry[0] in ids]
-    samples = load_samples(d0, 0) + load_samples(d1, 1)
-
-    inds_shuffled = np.random.permutation(len(samples))
-    normalize_hu = kgtrain.normalize_hu
+#        if id in d1:
+#            pos = d1[id]
+#            neg = d0[id]
+#            if len(neg) > (RATIO_NEG_TO_POS * len(pos)):
+#                neg = random.sample(neg, RATIO_NEG_TO_POS * len(pos))
+#            cands = pos + neg
     
-    with h5py.File(PATH_PROCESSED_H5, "r") as fh5:
-        while True:
-
-            if len(inds_shuffled) < batch_size:
-                inds_shuffled = np.random.permutation(len(samples))
-            
-            data = np.zeros((batch_size, ) + kgtrain.INPUT_SHAPE + (9,),
-                            dtype = np.float32)
-            for i in inds_shuffled[0:batch_size]:
-                cube = fh5.get(samples[i][0]).value[:, :, :, samples[i][2]]
-                crop_inds = np.random.randint(0, SZ_CUBE -
-                                              kgtrain.INPUT_SHAPE[0], 3)
-                cube = cube[crop_inds[0]:kgtrain.INPUT_SHAPE[0],
-                            crop_inds[1]:kgtrain.INPUT_SHAPE[0],
-                            crop_inds[2]:kgtrain.INPUT_SHAPE[0]]
-                data[:, :, :, i] = kgtrain.normalize_hu(
-                    kgtrain.slice_cube(cube))
-            labels = [samples[i][1] for i in inds_shuffled[0:batch_size]]
-            inds_shuffled = np.delete(inds_shuffled, range(0, batch_size))
-
-            yield np.expand_dims(data, axis=5), labels
-
-### Iterate candidates and extract samples
-d0, d1 = get_candidates()
-i = 0
-for id in d1:
-
-    i += 1
-    print("*** Processing {}/{}".format(i, len(d1)))
-
-    try:
-
-        if id in d1:
-            pos = d1[id]
-            neg = d0[id]
-            if len(neg) > (RATIO_NEG_TO_POS * len(pos)):
-                neg = random.sample(neg, RATIO_NEG_TO_POS * len(pos))
-            cands = pos + neg
-    
-        elif id in d0:
-            neg = d0[id]
-            if len(neg) > (RATIO_NEG_TO_POS):
-                neg = random.sample(neg, RATIO_NEG_TO_POS)
-            cands = neg
+#        elif id in d0:
+#            neg = d0[id]
+#            if len(neg) > (RATIO_NEG_TO_POS):
+#                neg = random.sample(neg, RATIO_NEG_TO_POS)
+#            cands = neg
 
         
-        # load the scan, function handle for converting world -> voxel
-        ct_scan, world_2_voxel = load_scan(id)
+#        # load the scan, function handle for converting world -> voxel
+#        ct_scan, world_2_voxel = load_scan(id)
 
-        gen_candidates(ct_scan, world_2_voxel, cands)
+#        gen_candidates(ct_scan, world_2_voxel, cands)
 
-    except:
-        print("Error in {}".format(id))
+#    except:
+#        print("Error in {}".format(id))
