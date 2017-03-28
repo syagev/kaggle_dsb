@@ -13,8 +13,6 @@ import random
 import os
 import skimage.io
 
-import kaggle.process_luna as kgluna    # for luna_generator, get_candidates
-
 PATH_LABELS_CSV = "C:/DATA/projects/kaggle/data/stage1_labels.csv"
 PATH_DETECTIONS_CSV = "/path/to.csv"
 PATH_PROCESSED_CT = "/razberry/datasets/kaggle-dsb2017/stage1_processed"
@@ -22,6 +20,8 @@ PATH_PROCESSED_H5 = "/razberry/datasets/kaggle-dsb2017/stage1_rois.h5"
 PATH_UNET = "C:\\DATA\\scratch\\models\\unet\\unet.hdf5"
 RAND_SEED = 13
 INPUT_SHAPE = (48, 48,)
+
+import kaggle.process_luna as kgluna    # for luna_generator, get_candidates
 
 #--------------- MODEL
 def get_unet(file_weights):
@@ -153,6 +153,51 @@ def kaggle_generator(samples, batch_size=8):
 
             yield np.expand_dims(np.stack(data, axis=0), axis=5), labels
 
+def luna_generator(d0, d1, batch_size=8, ids=None):
+    """Generates batches for training and validation from LUNA2016 set.
+
+    Args:
+        d0, d1: dictionaries for non-class/class resp. key is patient id
+        batch_size: required batch size (default 8)
+        ids: use these scan IDs (for train/val split)
+
+    Returns:
+        (data, labels): batch with data and labels
+    """
+
+    np.random.seed(RAND_SEED)
+
+    # construct the samples tuples (patient_id, label, idx)
+    def load_samples(d, label):
+        with h5py.File(os.path.join(PATH_OUTPUT, "{}.h5".format(label))) as f:
+            return [(entry[0], label, i)
+                    for i in range(0, f[entry[0]].shape[-1])
+                    for entry in d if entry[0] in ids]
+    samples = load_samples(d0, 0) + load_samples(d1, 1)
+
+    inds_shuffled = np.random.permutation(len(samples))
+    
+    with h5py.File(PATH_PROCESSED_H5, "r") as fh5:
+        while True:
+
+            if len(inds_shuffled) < batch_size:
+                inds_shuffled = np.random.permutation(len(samples))
+            
+            data = np.zeros((batch_size, ) + INPUT_SHAPE + (9,),
+                            dtype = np.float32)
+            for i in inds_shuffled[0:batch_size]:
+                cube = fh5.get(samples[i][0]).value[:, :, :, samples[i][2]]
+                crop_inds = np.random.randint(0, SZ_CUBE -
+                                              INPUT_SHAPE[0], 3)
+                cube = cube[crop_inds[0]:INPUT_SHAPE[0],
+                            crop_inds[1]:INPUT_SHAPE[0],
+                            crop_inds[2]:INPUT_SHAPE[0]]
+                data[:, :, :, i] = normalize_hu(slice_cube(cube))
+            labels = [samples[i][1] for i in inds_shuffled[0:batch_size]]
+            inds_shuffled = np.delete(inds_shuffled, range(0, batch_size))
+
+            yield np.expand_dims(data, axis=5), labels
+
 def slice_cube(cube):
 
     slices = np.zeros((cube.shape[0], cube.shape[0], 9), dtype=np.float32)
@@ -209,70 +254,3 @@ def process_detections():
         # iterate detections and create the ROI database
         for patient in detections:
             pass
-
-#train, val = split_train_val()
-#train = random.sample(train, 30)
-#val = random.sample(val, 10)
-#gen_simulated_data(train + val)
-
-# load luna dataset, split to train and validation
-d0, d1 = kgluna.get_candidates()
-ids_train = [item[0] for item in
-             np.sample(list(d1.keys()), int(np.round(0.7 * len(d1))))]
-ids_val = set(d1.keys).difference(set(ids_train))
-
-model = get_unet(PATH_UNET)
-model_checkpoint = ModelCheckpoint("unet_trained.hdf5", monitor="loss",
-                                   save_best_only=True)
-history = model.fit_generator(kgluna.luna_generator(d0, d1, 8, ids_train),
-                              steps_per_epoch=25,
-                              epochs=3,
-                              validation_data=
-                              kgluna.luna_generator(d0, d1, 8, ids_val),
-                              validation_steps=5,
-                              callbacks=[model_checkpoint],
-                              verbose=1)
-
-
-# ------------------------------------------------
-# DEFINE TRAINING SESSION
-#print("-"*30)
-#print("Creating and compiling model...")
-#print("-"*30)
-#model = get_mock_model()
-#model_checkpoint = ModelCheckpoint("unet.hdf5", monitor="loss", save_best_only=True)
-
-#print("-"*30)
-#print("Fitting model...")
-#print("-"*30)
-
-
-#history = model.fit_generator(mnist_generator("training"),
-#                              steps_per_epoch=250,
-#                              epochs=5,
-#                              validation_data=mnist_generator("testing"),
-#                              validation_steps=20)
-
-
-#history = model.fit(x, y, batch_size=2, validation_split=0.2, nb_epoch=1, verbose=1,
-#          shuffle=True, callbacks=[model_checkpoint])
-
-
-# TODO: print also the starting point
-# summarize history for accuracy
-plt.plot(history.history["acc"])
-plt.plot(history.history["val_acc"])
-plt.title("model accuracy")
-plt.ylabel("accuracy")
-plt.xlabel("epoch")
-plt.legend(["train", "test"], loc="upper left")
-plt.savefig("accuracy.png")
-# summarize history for loss
-plt.cla()
-plt.plot(history.history["loss"])
-plt.plot(history.history["val_loss"])
-plt.title("model loss")
-plt.ylabel("loss")
-plt.xlabel("epoch")
-plt.legend(["train", "test"], loc="upper left")
-plt.savefig("loss.png")
