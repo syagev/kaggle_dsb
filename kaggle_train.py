@@ -8,6 +8,7 @@ import kaggle.process_luna as kgluna
 from keras.callbacks import ModelCheckpoint
 import subprocess
 import os
+import h5py     # temp, for loading LUNA's processed h5 files for # samples
 
 OUTPUT_DIR = "/razberry/workspace/luna2016"
 
@@ -24,17 +25,30 @@ os.mkdir(output_dir_ver)
 d0, d1 = kgluna.get_candidates()
 ids_train = [item for item in
              random.sample(list(d1.keys()), int(np.round(0.7 * len(d1))))]
-ids_val = set(d1.keys()).difference(set(ids_train))
+ids_test = set(d1.keys()).difference(set(ids_train))
+
+# TMP, for figuring out the training/test sets size
+batch_size = 8
+def load_samples(d, label, ids):
+    with h5py.File(os.path.join(kgluna.PATH_OUTPUT, \
+                                "{}.h5".format(label))) as f:
+        return [(entry, label, i)
+                for entry in d if entry in ids
+                for i in range(0, f[entry].shape[-1])]
+samples = load_samples(d0, 0, ids_train) + load_samples(d1, 1, ids_train)
+steps_per_epoch = int(len(samples) / batch_size)
+samples = load_samples(d0, 0, ids_test) + load_samples(d1, 1, ids_test)
+validation_steps = int(len(samples) / batch_size)
 
 model = kgtrain.get_unet()
 model_checkpoint = ModelCheckpoint(os.path.join(output_dir_ver, "unet.hdf5"),
                                    monitor="loss", save_best_only=True)
 history = model.fit_generator(kgtrain.luna_generator(d0, d1, 8, ids_train),
-                              steps_per_epoch=240,
-                              epochs=100,
+                              steps_per_epoch=steps_per_epoch,
+                              epochs=50,
                               validation_data=
-                              kgtrain.luna_generator(d0, d1, 8, ids_val),
-                              validation_steps=80,
+                              kgtrain.luna_generator(d0, d1, 8, ids_test),
+                              validation_steps=validation_steps,
                               callbacks=[model_checkpoint],
                               verbose=1)
 
