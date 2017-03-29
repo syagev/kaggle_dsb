@@ -31,7 +31,7 @@ model_checkpoint = ModelCheckpoint(os.path.join(output_dir_ver, "unet.hdf5"),
                                    monitor="loss", save_best_only=True)
 history = model.fit_generator(kgtrain.luna_generator(d0, d1, 8, ids_train),
                               steps_per_epoch=240,
-                              epochs=50,
+                              epochs=100,
                               validation_data=
                               kgtrain.luna_generator(d0, d1, 8, ids_val),
                               validation_steps=80,
