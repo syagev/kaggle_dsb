@@ -95,7 +95,7 @@ def get_unet(file_weights=PATH_UNET):
             # set the weights
             model.layers[inds_conv_layers[i-1]].set_weights([W, b])
 
-        model.compile(optimizer=Adam(lr=1e-5), loss="binary_crossentropy",
+        model.compile(optimizer=Adam(lr=5e-5), loss="binary_crossentropy",
                   metrics=['accuracy'])
 
     return model
