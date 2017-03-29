@@ -17,14 +17,14 @@ PATH_LABELS_CSV = "C:/DATA/projects/kaggle/data/stage1_labels.csv"
 PATH_DETECTIONS_CSV = "/path/to.csv"
 PATH_PROCESSED_CT = "/razberry/datasets/kaggle-dsb2017/stage1_processed"
 PATH_PROCESSED_H5 = "/razberry/datasets/kaggle-dsb2017/stage1_rois.h5"
-PATH_UNET = "C:\\DATA\\scratch\\models\\unet\\unet.hdf5"
+PATH_UNET = "/home/omer/unet.hdf5"
 RAND_SEED = 13
 INPUT_SHAPE = (48, 48,)
 
 import kaggle.process_luna as kgluna    # for luna_generator, get_candidates
 
 #--------------- MODEL
-def get_unet(file_weights):
+def get_unet(file_weights=PATH_UNET):
     """Initializes a 3D U-Net.
 
     Based on https://github.com/booz-allen-hamilton/DSB3Tutorial/blob/master/tutorial_code/LUNA_train_unet.py
@@ -169,34 +169,38 @@ def luna_generator(d0, d1, batch_size=8, ids=None):
 
     # construct the samples tuples (patient_id, label, idx)
     def load_samples(d, label):
-        with h5py.File(os.path.join(PATH_OUTPUT, "{}.h5".format(label))) as f:
-            return [(entry[0], label, i)
-                    for i in range(0, f[entry[0]].shape[-1])
-                    for entry in d if entry[0] in ids]
+        with h5py.File(os.path.join(kgluna.PATH_OUTPUT, \
+                                    "{}.h5".format(label))) as f:
+            return [(entry, label, i)
+                    for entry in d if entry in ids
+                    for i in range(0, f[entry].shape[-1])]
     samples = load_samples(d0, 0) + load_samples(d1, 1)
 
     inds_shuffled = np.random.permutation(len(samples))
     
-    with h5py.File(PATH_PROCESSED_H5, "r") as fh5:
-        while True:
+    with h5py.File(os.path.join(kgluna.PATH_OUTPUT, "0.h5"), "r") as f0:
+        with h5py.File(os.path.join(kgluna.PATH_OUTPUT, "1.h5"), "r") as f1:
+            while True:
 
-            if len(inds_shuffled) < batch_size:
-                inds_shuffled = np.random.permutation(len(samples))
+                if len(inds_shuffled) < batch_size:
+                    inds_shuffled = np.random.permutation(len(samples))
             
-            data = np.zeros((batch_size, ) + INPUT_SHAPE + (9,),
-                            dtype = np.float32)
-            for i in inds_shuffled[0:batch_size]:
-                cube = fh5.get(samples[i][0]).value[:, :, :, samples[i][2]]
-                crop_inds = np.random.randint(0, SZ_CUBE -
-                                              INPUT_SHAPE[0], 3)
-                cube = cube[crop_inds[0]:INPUT_SHAPE[0],
-                            crop_inds[1]:INPUT_SHAPE[0],
-                            crop_inds[2]:INPUT_SHAPE[0]]
-                data[:, :, :, i] = normalize_hu(slice_cube(cube))
-            labels = [samples[i][1] for i in inds_shuffled[0:batch_size]]
-            inds_shuffled = np.delete(inds_shuffled, range(0, batch_size))
+                data = np.zeros((batch_size, ) + INPUT_SHAPE + (9,),
+                                dtype = np.float32)
+                for i in range(0, batch_size):
+                    sample = samples[inds_shuffled[i]]
+                    f = f0 if sample[1] == 0 else f1
+                    cube = f.get(sample[0]).value[:, :, :, sample[2]]
+                    crop_inds = np.random.randint(0, kgluna.SZ_CUBE -
+                                                  INPUT_SHAPE[0], 3)
+                    cube = cube[crop_inds[0]:crop_inds[0] + INPUT_SHAPE[0],
+                                crop_inds[1]:crop_inds[1] + INPUT_SHAPE[0],
+                                crop_inds[2]:crop_inds[2] + INPUT_SHAPE[0]]
+                    data[i, :, :, :] = normalize_hu(slice_cube(cube))
+                labels = [samples[i][1] for i in inds_shuffled[0:batch_size]]
+                inds_shuffled = np.delete(inds_shuffled, range(0, batch_size))
 
-            yield np.expand_dims(data, axis=5), labels
+                yield np.expand_dims(data, axis=5), labels
 
 def slice_cube(cube):
 
