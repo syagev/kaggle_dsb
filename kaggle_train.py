@@ -5,7 +5,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import kaggle.train as kgtrain
 import kaggle.process_luna as kgluna
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 import subprocess
 import os
 import h5py     # temp, for loading LUNA's processed h5 files for # samples
@@ -18,7 +18,8 @@ OUTPUT_DIR = "/razberry/workspace/luna2016"
 #ptvsd.wait_for_attach()
 
 version = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'])
-output_dir_ver = os.path.join(OUTPUT_DIR, version.strip().decode("ascii"))
+version = version.strip().decode("ascii")
+output_dir_ver = os.path.join(OUTPUT_DIR, version)
 os.mkdir(output_dir_ver)
 
 # load luna dataset, split to train and validation
@@ -41,15 +42,26 @@ samples = load_samples(d0, 0, ids_test) + load_samples(d1, 1, ids_test)
 validation_steps = int(len(samples) / batch_size)
 
 model = kgtrain.get_unet()
-model_checkpoint = ModelCheckpoint(os.path.join(output_dir_ver, "unet.hdf5"),
-                                   monitor="loss", save_best_only=True)
+model_cp = ModelCheckpoint(os.path.join(output_dir_ver, 
+                                        "unet_{}.hdf5".format(version)),
+                           monitor="val_loss",
+                           save_best_only=True)
+def lr_schedule(epoch):
+    base = 5e-5
+    rate_factor = 2
+    rate_epochs = 5
+    lr = base if epoch < rate_epochs \
+              else base / (rate_factor * np.floor(epoch / rate_epochs))
+    return lr
+lr_scheduler = LearningRateScheduler(lr_schedule)
+    
 history = model.fit_generator(kgtrain.luna_generator(d0, d1, 8, ids_train),
                               steps_per_epoch=steps_per_epoch,
                               epochs=50,
                               validation_data=
                               kgtrain.luna_generator(d0, d1, 8, ids_test),
                               validation_steps=validation_steps,
-                              callbacks=[model_checkpoint],
+                              callbacks=[model_cp, lr_scheduler],
                               verbose=1)
 
 # TODO: print also the starting point
