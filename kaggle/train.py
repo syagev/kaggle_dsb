@@ -76,7 +76,7 @@ def get_unet(file_weights=PATH_UNET):
         maxpool_det = Flatten()(maxpool_det)
 
         # in: (B, 512)
-        dropout = Dropout(0.5)(maxpool_det)
+        dropout = Dropout(0.75)(maxpool_det)
         fc = Dense(1, activation="sigmoid")(dropout)
 
         model = Model(inputs=inputs, outputs=fc)
