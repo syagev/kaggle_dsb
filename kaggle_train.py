@@ -47,11 +47,11 @@ model_cp = ModelCheckpoint(os.path.join(output_dir_ver,
                            monitor="val_loss",
                            save_best_only=True)
 def lr_schedule(epoch):
-    base = 5e-5
-    rate_factor = 2
-    rate_epochs = 5
-    lr = base if epoch < rate_epochs \
-              else base / (rate_factor * np.floor(epoch / rate_epochs))
+    base = 1e-4
+    rate_factor = 5
+    rate_epochs = 10
+    lr = base if epoch + 1 < rate_epochs \
+              else base / (rate_factor * np.floor(epoch + 1 / rate_epochs))
     return lr
 lr_scheduler = LearningRateScheduler(lr_schedule)
     
