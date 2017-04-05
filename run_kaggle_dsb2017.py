@@ -7,10 +7,15 @@ import csv
 import os
 import keras.optimizers
 
+#import ptvsd
+#ptvsd.enable_attach(None, address = ('0.0.0.0', 3000))
+#print("Waiting for attach.")
+#ptvsd.wait_for_attach()
+
 # paths to raw data
 PATH_TRAIN_DATA = "/path/to/training_data"
 PATH_TEST_DATA = "/path/to/test/data"
-PATH_TRAIN_LABELS = r"C:\DATA\projects\deep-lung\data\stage1_labels.csv"
+PATH_TRAIN_LABELS = "/razberry/datasets/kaggle-dsb2017/stage1_labels.csv"
 
 # paths to processed data
 PATH_TRAIN_PROCESSED = "/path/to/train_proc"
@@ -21,18 +26,19 @@ PATH_DATASETS = "/razberry/datasets/kaggle-dsb2017"
 PATH_WORKSPACE = "/razberry/workspace"
 
 # parameters
-N_CROSS_VAL = 10
+N_CROSS_VAL = 2
 
 # session header
 version = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'])
 version = version.strip().decode("ascii")
-path_session = os.path.join(PATH_WORKSPACE, "dsb2017_{}".format(version))
-os.mkdir(path_session)
+path_session = os.path.join(PATH_WORKSPACE, "dsb2017.{}".format(version))
+if not os.path.exists(path_session):
+    os.mkdir(path_session)
 
 # TODO: process (both train and test)
 
 
-
+"""
 # TODO: detection (both train and test)
 train_csv = os.path.join(PATH_DATASETS, "detections_train.csv")
 test_csv = os.path.join(PATH_DATASETS, "detections_test.csv")
@@ -44,33 +50,44 @@ kaggle.util.extract_detections(PATH_TRAIN_DATA, train_csv,
 kaggle.util.extract_detections(PATH_TEST_DATA, test_csv,
                                os.path.join(PATH_DATASETS,
                                             "detections_test.hdf5"))
+"""
 
 # train an ensemble of classifiers
 hyper_param = {
-    "epochs" : 10,
-    "batch_sz": [8],
-    "batch_norm": [True, False],
+    # optimization
+    "epochs" : 1,
+    "batch_sz": [4],
     "optimizers": [keras.optimizers.Adam(1e-4)],
-    "lr_scheduler_param": [(1e-4, 5, 10),
-                            (1e-4, 10, 20)]
+    "lr_scheduler_param": [(1e-4, 5, 10), (1e-4, 10, 20)],
+    # architecture
+    "dropout_rate": [0.5],
+    "batch_norm": [True],
+    "pool_type" : ["both"]
     }
 
 models =[]
 for i in range(0, N_CROSS_VAL):
 
+    print("*** Training and cross validation {}/{}".format(i + 1, N_CROSS_VAL))
+
     # split to training and validation sets
     train, val = kaggle.classifier.split_train_val(PATH_TRAIN_LABELS,
-                                                   int(version, 16) + i)
+                                                   seed=int(version, 16) + i)
+
+    session_id = os.path.basename(path_session)
+    path_session_i = os.path.join(path_session, "{}_".format(i) + session_id)
+    if not os.path.exists(path_session_i):
+        os.mkdir(path_session_i)
 
     models.append(kaggle.classifier.train_ensemble(
         train,
         val,
-        os.path.join(PATH_DATASETS, "detections_train.hdf5"),
-        path_session,
+        os.path.join(PATH_DATASETS, "stage1_detections_mock.hdf5"),
+        path_session_i,
         hyper_param))
 
 
-# TODO: predict on test dir (stage-1 heldout and stage-2)
+# predict on test dir (stage-1 holdout and stage-2)
 # TODO: evaluate all models, consider different mixtures:
 #   average, median, voting, different subsets, etc
 
