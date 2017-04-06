@@ -36,32 +36,43 @@ def _get_model(optimizer, do_batch_norm, pool_type="max", dropout_rate=0.5):
             N_DETECTIONS: number of detections per patient (probably in [1,20])
     """
 
+    # convolutions with/out batch normalization
+    def Conv(*args, **kwargs):
+        
+        def Conv_(input):
+            if do_batch_norm:
+                return BatchNormalization()(Conv3D(*args, **kwargs)(input))
+            else:
+                return Conv3D(*args, **kwargs)(input)
+
+        return Conv_
+
     # set up the architecture
     inputs = Input((INPUT_SZ, INPUT_SZ, None, 1))
   
     # in: (B, 48, 48, N_SLICES x N_DETECTIONS, 1)
-    conv1 = Conv3D(32, (3, 3, 1), activation="relu", padding="same")(inputs)
-    conv1 = Conv3D(32, (3, 3, 1), activation="relu", padding="same")(conv1)
+    conv1 = Conv(32, (3, 3, 1), activation="relu", padding="same")(inputs)
+    conv1 = Conv(32, (3, 3, 1), activation="relu", padding="same")(conv1)
     pool1 = MaxPool3D(pool_size=(2, 2, 1))(conv1)
 
     # in: (B, 24, 24, N_SLICES x N_DETECTIONS, 32)
-    conv2 = Conv3D(64, (3, 3, 1), activation="relu", padding="same")(pool1)
-    conv2 = Conv3D(64, (3, 3, 1), activation="relu", padding="same")(conv2)
+    conv2 = Conv(64, (3, 3, 1), activation="relu", padding="same")(pool1)
+    conv2 = Conv(64, (3, 3, 1), activation="relu", padding="same")(conv2)
     pool2 = MaxPool3D(pool_size=(2, 2, 3))(conv2)
 
     # in: (B, 12, 12, N_SLICES/3 x N_DETECTIONS, 64)
-    conv3 = Conv3D(128, (3, 3, 1), activation="relu", padding="same")(pool2)
-    conv3 = Conv3D(128, (3, 3, 1), activation="relu", padding="same")(conv3)
+    conv3 = Conv(128, (3, 3, 1), activation="relu", padding="same")(pool2)
+    conv3 = Conv(128, (3, 3, 1), activation="relu", padding="same")(conv3)
     pool3 = MaxPool3D(pool_size=(2, 2, 3))(conv3)
 
     # in: (B, 6, 6, N_DETECTIONS, 128)
-    conv4 = Conv3D(256, (3, 3, 1), activation="relu", padding="same")(pool3)
-    conv4 = Conv3D(256, (3, 3, 1), activation="relu", padding="same")(conv4)
+    conv4 = Conv(256, (3, 3, 1), activation="relu", padding="same")(pool3)
+    conv4 = Conv(256, (3, 3, 1), activation="relu", padding="same")(conv4)
     pool4 = MaxPool3D(pool_size=(2, 2, 1))(conv4)
 
     # in: (B, 3, 3, N_DETECTIONS, 256)
-    conv5 = Conv3D(512, (3, 3, 1), activation="relu", padding="same")(pool4)
-    conv5 = Conv3D(512, (3, 3, 1), activation="relu", padding="same")(conv5)
+    conv5 = Conv(512, (3, 3, 1), activation="relu", padding="same")(pool4)
+    conv5 = Conv(512, (3, 3, 1), activation="relu", padding="same")(conv5)
     pool5 = MaxPool3D(pool_size=(3, 3, 1))(conv5)
 
     # in: (B, 1, 1, N_DETECTIONS, 512)
@@ -171,7 +182,7 @@ def threadsafe_generator(f):
     return g
 
 @threadsafe_generator
-def _sample_generator(samples, path_data, batch_sz=8):
+def _sample_generator(samples, path_data, batch_sz=8, mode="train"):
     """Generates batches for training and validation.
 
     Args:
@@ -181,7 +192,10 @@ def _sample_generator(samples, path_data, batch_sz=8):
     Returns:
         (data, labels): batch with data and labels
     """
-    inds_shuffled = np.random.permutation(len(samples))
+    if mode == "train":
+        inds_shuffled = np.random.permutation(len(samples))
+    elif mode == "predict":
+        inds_shuffled = range(0, len(samples))
     
     with h5py.File(path_data, "r") as fh5:
         while True:
@@ -191,7 +205,7 @@ def _sample_generator(samples, path_data, batch_sz=8):
                 inds_shuffled = np.random.permutation(len(samples))
 
             # figure out batch's maximal 3-rd dim size
-            max_sz = 1 * N_SLICES
+            max_sz = 0
             for i in range(0, batch_sz):
                 if samples[inds_shuffled[i]][0] in fh5:
                     max_sz = max(fh5[samples[inds_shuffled[i]][0]].shape[-1]
@@ -223,14 +237,21 @@ def _sample_generator(samples, path_data, batch_sz=8):
                     cube_i = np.dstack(cube_i)
                     data[i, :, :, 0:cube_i.shape[2]] = cube_i
 
-                    labels.append(samples[inds_shuffled[i]][1])
+                    if mode == "train":
+                        labels.append(samples[inds_shuffled[i]][1])
                 
                 else:
-                    labels.append(0)
+                    if mode == "train":
+                        labels.append(0)
                 
             inds_shuffled = np.delete(inds_shuffled, range(0, batch_sz))
 
-            yield np.expand_dims(data, axis=5), labels
+            if mode == "train":
+                output = (np.expand_dims(data, axis=5), labels)
+            elif mode == "predict":
+                output = np.expand_dims(data, axis=5)
+
+            yield output
 
 def train(trainset, valset, path_data, path_session, hyper_param):
     """Execute a single training task.
@@ -256,10 +277,10 @@ def train(trainset, valset, path_data, path_session, hyper_param):
                        dropout_rate=hyper_param["dropout_rate"])
     history = model.fit_generator(
         _sample_generator(trainset, path_data, hyper_param["batch_sz"]),
-        steps_per_epoch=int(len(trainset) / hyper_param["batch_sz"]),
+        steps_per_epoch=3, #int(len(trainset) / hyper_param["batch_sz"]),
         epochs=hyper_param["epochs"],
         validation_data=_sample_generator(valset, path_data, 2),
-        validation_steps=int(len(valset) / 2),
+        validation_steps=3, #int(len(valset) / 2),
         callbacks=[model_cp, hyper_param["lr_schedule"]],
         verbose=1,
         workers=4)
@@ -358,6 +379,88 @@ def load_ensemble(path):
             models.append(models_i)
 
     return models
+
+def predict_ensemble(models, path_data, test_ids, path_output):
+    """Predict an ensemble of models.
+
+    Args:
+        models: output from `train_ensemble` or `load_ensemble`
+        path_data: /path/to/detections.hdf5
+        test_ids: predict on these scan IDs
+        path_output: save predictions.csv to this path
+
+    Returns:
+        saves a collection of prediction.csv files to path_output
+    """
+
+    if not os.path.exists(path_output):
+        os.mkdir(path_output)
+    session_id = os.path.basename(path_output)
+
+    # predict all models
+    predictions = []
+    models_inds = []
+    models_loss = []
+    with h5py.File(path_data, "r") as fh5:
+        for i, models_crossval in enumerate(models):
+            for j, model_task in enumerate(models_crossval):
+                
+                # load the model
+                model = keras.models.load_model(model_task[0])
+
+                # predict
+                preds = model.predict_generator(
+                    _sample_generator([(id,) for id in test_ids], # req. tuple
+                                      path_data,
+                                      batch_sz=1,
+                                      mode="predict"),
+                    steps = 1)
+                predictions.append(preds)
+
+                # stats about model
+                models_inds.append((i, j))
+                models_loss.append(model_task[1])
+
+    # ----- several bagging regimes
+    predictions = np.concatenate(predictions, axis=1)
+    def csv_write_helper(filename, ids, vals):
+        filename = "{}_{}".format(session_id, filename)
+        with open(os.path.join(path_output, filename), "w", newline="") as f:
+            wr = csv.writer(f)
+            wr.writerow(("id", "cancer"))
+            for id, val in zip(ids, vals):
+                wr.writerow((id, "%.2f" % np.round(val, 2)))
+
+    # mean over all predictions
+    preds = np.mean(predict_ensemble, axis=1)
+    csv_write_helper("ensemble_mean.csv", test_ids, preds)
+
+    # median over all predictions
+    preds = np.median(predict_ensemble, axis=1)
+    csv_write_helper("ensemble_median.csv", test_ids, preds)
+
+    # mean over top models from each cross-validation round
+    inds_top_xval = [i for i, inds in enumerate(models_inds) if inds[1] == 0]
+    preds = np.mean(predict_ensemble[:, inds_top_xval], axis=1)
+    csv_write_helper("crossval_top_mean.csv", test_ids, preds)
+    
+    # median over top models from each cross-validation round
+    preds = np.median(predict_ensemble[:, inds_top_xval], axis=1)
+    csv_write_helper("crossval_top_median.csv", test_ids, preds)
+
+    # mean over top percentile
+    top_prc = np.percentile(models_loss, 20)
+    inds_top_prc = [i for i, val in enumerate(models_loss) if val <= top_prc]
+    preds = np.mean(predict_ensemble[:, inds_top_prc], axis=1)
+    csv_write_helper("prctle_top_mean.csv", test_ids, preds)
+
+    # median over top percentile
+    preds = np.median(predict_ensemble[:, inds_top_prc], axis=1)
+    csv_write_helper("prctle_top_median.csv", test_ids, preds)
+
+    # top model
+    ind_best = np.argmin(models_loss)
+    csv_write_helper("best_model.csv", test_ids, predictions[:, ind_best])
 
 def train_ensemble(trainset, valset, path_data, path_session, hyper_param):
     """Train an ensemble of models per set of hyper param.

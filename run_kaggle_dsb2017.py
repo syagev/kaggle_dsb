@@ -55,17 +55,18 @@ kaggle.util.extract_detections(PATH_TEST_DATA, test_csv,
 # train an ensemble of classifiers
 hyper_param = {
     # optimization
-    "epochs" : 5,
-    "batch_sz": [3],
+    "epochs" : 1,
+    "batch_sz": [4],
     "optimizers": [keras.optimizers.Adam(1e-4)],
-    "lr_scheduler_param": [(1e-4, 5, 10)],
+    "lr_scheduler_param": [(1e-4, 5, 10), (1e-4, 10, 20)],
     # architecture
     "dropout_rate": [0.5],
-    "batch_norm": [False],
-    "pool_type" : ["max", "mean", "both"]
+    "batch_norm": [True],
+    "pool_type" : ["both"]
     }
 
 models =[]
+session_id = os.path.basename(path_session)
 for i in range(0, N_CROSS_VAL):
 
     print("*** Training and cross validation {}/{}".format(i + 1, N_CROSS_VAL))
@@ -74,7 +75,6 @@ for i in range(0, N_CROSS_VAL):
     train, val = kaggle.classifier.split_train_val(PATH_TRAIN_LABELS,
                                                    seed=int(version, 16) + i)
 
-    session_id = os.path.basename(path_session)
     path_session_i = os.path.join(path_session, "{}_".format(i) + session_id)
     if not os.path.exists(path_session_i):
         os.mkdir(path_session_i)
@@ -82,12 +82,16 @@ for i in range(0, N_CROSS_VAL):
     models.append(kaggle.classifier.train_ensemble(
         train,
         val,
-        os.path.join(PATH_DATASETS, "stage1_detections.hdf5"),
+        os.path.join(PATH_DATASETS, "stage1_detections_mock.hdf5"),
         path_session_i,
         hyper_param))
 
 
 # predict on test dir (stage-1 holdout and stage-2)
-# TODO: evaluate all models, consider different mixtures:
-#   average, median, voting, different subsets, etc
+test_ids = [os.path.splitext(id)[0] for id in os.listdir(PATH_TEST_PROCESSED)]
+kaggle.classifier.predict_ensemble(
+    models,
+    os.path.join(PATH_DATASETS, "stage1_detections_mock.hdf5"),
+    test_ids,
+    os.path.join(path_session))
 
