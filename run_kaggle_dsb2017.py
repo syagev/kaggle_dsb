@@ -2,6 +2,7 @@
 
 import kaggle.classifier
 import kaggle.util
+import kaggle.process
 import subprocess
 import csv
 import os
@@ -35,7 +36,9 @@ path_session = os.path.join(PATH_WORKSPACE, "dsb2017.{}".format(version))
 if not os.path.exists(path_session):
     os.mkdir(path_session)
 
-# TODO: process (both train and test)
+# process (both train and test)
+kaggle.process.process(PATH_TRAIN_DATA, PATH_TRAIN_PROCESSED)
+kaggle.process.process(PATH_TEST_DATA, PATH_TEST_PROCESSED)
 
 
 """
