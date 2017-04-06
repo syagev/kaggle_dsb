@@ -12,6 +12,7 @@ import csv
 import h5py
 import threading
 import pickle
+import sys
 
 INPUT_SZ = 48
 N_SLICES = 9
@@ -357,7 +358,10 @@ def load_ensemble(path):
             for task_id in os.listdir(os.path.join(path, crossval_id)):
                 task_prefix = os.path.join(path, crossval_id, task_id, task_id)
                 with open("{}_history.pkl".format(task_prefix), "rb") as f:
-                    history = pickle.load(f, encoding="latin1")
+                    if sys.version[0:3] == "2.7":
+                        history = pickle.load(f)
+                    else:
+                        history = pickle.load(f, encoding="latin1")
                     ind_min_loss = np.argmin(history["val_loss"])
                     models_i.append(
                         ("{}_model.hdf5".format(task_prefix),
