@@ -9,7 +9,7 @@ import keras.optimizers
 
 #import ptvsd
 #ptvsd.enable_attach(None, address = ('0.0.0.0', 3000))
-#print("Waiting for attach.")
+#print("waiting for attach.")
 #ptvsd.wait_for_attach()
 
 # paths to raw data
@@ -26,7 +26,7 @@ PATH_DATASETS = "/razberry/datasets/kaggle-dsb2017"
 PATH_WORKSPACE = "/razberry/workspace"
 
 # parameters
-N_CROSS_VAL = 2
+N_CROSS_VAL = 0
 
 # session header
 version = subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'])
@@ -55,40 +55,40 @@ kaggle.util.extract_detections(PATH_TEST_DATA, test_csv,
 # train an ensemble of classifiers
 hyper_param = {
     # optimization
-    "epochs" : 5,
+    "epochs" : 2,
     "batch_sz": [3],
     "optimizers": [keras.optimizers.Adam(1e-4)],
     "lr_scheduler_param": [(1e-4, 5, 10)],
     # architecture
     "dropout_rate": [0.5],
     "batch_norm": [False],
-    "pool_type" : ["max", "mean", "both"]
+    "pool_type" : ["max", "mean"]
     }
 
 models =[]
 session_id = os.path.basename(path_session)
-#for i in range(0, N_CROSS_VAL):
+for i in range(0, N_CROSS_VAL):
 
-#    print("*** Training and cross validation {}/{}".format(i + 1, N_CROSS_VAL))
+   print("*** Training and cross validation {}/{}".format(i + 1, N_CROSS_VAL))
 
-#    # split to training and validation sets
-#    train, val = kaggle.classifier.split_train_val(PATH_TRAIN_LABELS,
-#                                                   seed=int(version, 16) + i)
+   # split to training and validation sets
+   train, val = kaggle.classifier.split_train_val(PATH_TRAIN_LABELS,
+                                                  seed=int(version, 16) + i)
 
-#    path_session_i = os.path.join(path_session, "{}_".format(i) + session_id)
-#    if not os.path.exists(path_session_i):
-#        os.mkdir(path_session_i)
+   path_session_i = os.path.join(path_session, "{}_".format(i) + session_id)
+   if not os.path.exists(path_session_i):
+       os.mkdir(path_session_i)
 
-#    models.append(kaggle.classifier.train_ensemble(
-#        train,
-#        val,
-#        os.path.join(PATH_DATASETS, "stage1_detections.hdf5"),
-#        path_session_i,
-#        hyper_param))
+   models.append(kaggle.classifier.train_ensemble(
+       train,
+       val,
+       os.path.join(PATH_DATASETS, "stage1_detections.hdf5"),
+       path_session_i,
+       hyper_param))
 
 
 # predict on test dir (stage-1 holdout and stage-2)
-models = kaggle.classifier.load_ensemble("/razberry/workspace/dsb2017.788268e")
+models = kaggle.classifier.load_ensemble("/razberry/workspace/dsb2017.bfa827b")
 test_ids = [os.path.splitext(id)[0] for id in os.listdir(PATH_TEST_PROCESSED)]
 kaggle.classifier.predict_ensemble(
     models,

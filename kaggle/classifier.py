@@ -6,6 +6,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import keras
+import keras.backend as K
 import keras.callbacks
 from keras.layers import Input, Conv3D, MaxPool3D, Lambda, Flatten, Dropout, Dense, BatchNormalization, Concatenate
 import csv
@@ -18,6 +19,7 @@ INPUT_SZ = 48
 N_SLICES = 9
 # TODO: check with our initialized models!
 PATH_UNET = "/home/omer/unet.hdf5"
+
 
 
 def _get_model(optimizer, do_batch_norm, pool_type="max", dropout_rate=0.5):
@@ -66,8 +68,15 @@ def _get_model(optimizer, do_batch_norm, pool_type="max", dropout_rate=0.5):
     pool5 = MaxPool3D(pool_size=(3, 3, 1))(conv5)
 
     # in: (B, 1, 1, N_DETECTIONS, 512)
-    maxpool_det = Lambda((lambda x: keras.backend.max(x, axis=3)))(pool5)
-    meanpool_det = Lambda((lambda x: keras.backend.mean(x, axis=3)))(pool5)
+    # # --- ugly fix, see https://github.com/fchollet/keras/issues/4609
+    # def K_mean(x, **arguments):
+        # from keras import backend as K
+        # return K.mean(x, **arguments)
+    # def K_max(x, **arguments):
+        # from keras import backend as K
+        # return K.max(x, **arguments)
+    maxpool_det = Lambda((lambda x: K.max(x, axis=3)))(pool5)
+    meanpool_det = Lambda((lambda x: K.mean(x, axis=3)))(pool5)
     if pool_type == "both":
         pool_det = Concatenate(-1)([maxpool_det, meanpool_det])   
     else:
@@ -396,18 +405,22 @@ def predict_ensemble(models, path_data, test_ids, path_output):
     models_loss = []
     with h5py.File(path_data, "r") as fh5:
         for i, models_crossval in enumerate(models):
+
+            print("*** predictions on {}/{}".format(i + 1, len(models)))
             for j, model_task in enumerate(models_crossval):
                 
                 # load the model
                 model = keras.models.load_model(model_task[0])
 
                 # predict
-                preds = model.predict_generator(
-                    _sample_generator([(id,) for id in test_ids], # req. tuple
-                                      path_data,
-                                      batch_sz=1,
-                                      mode="predict"),
-                    steps = 1)
+                preds = np.zeros(len(test_ids))
+                for i in range(0, len(test_ids)):
+                    preds[i] = model.predict_generator(
+                        _sample_generator([(id,) for id in test_ids], # req. tuple
+                                          path_data,
+                                          batch_sz=1,
+                                          mode="predict"),
+                        steps = 1)
                 predictions.append(preds)
 
                 # stats about model
@@ -415,40 +428,40 @@ def predict_ensemble(models, path_data, test_ids, path_output):
                 models_loss.append(model_task[1])
 
     # ----- several bagging regimes
-    predictions = np.concatenate(predictions, axis=1)
+    predictions = np.stack(predictions, axis=1)
     def csv_write_helper(filename, ids, vals):
         filename = "{}_{}".format(session_id, filename)
-        with open(os.path.join(path_output, filename), "w", newline="") as f:
+        with open(os.path.join(path_output, filename), "w") as f:
             wr = csv.writer(f)
             wr.writerow(("id", "cancer"))
             for id, val in zip(ids, vals):
                 wr.writerow((id, "%.2f" % np.round(val, 2)))
 
     # mean over all predictions
-    preds = np.mean(predict_ensemble, axis=1)
+    preds = np.mean(predictions, axis=1)
     csv_write_helper("ensemble_mean.csv", test_ids, preds)
 
     # median over all predictions
-    preds = np.median(predict_ensemble, axis=1)
+    preds = np.median(predictions, axis=1)
     csv_write_helper("ensemble_median.csv", test_ids, preds)
 
     # mean over top models from each cross-validation round
     inds_top_xval = [i for i, inds in enumerate(models_inds) if inds[1] == 0]
-    preds = np.mean(predict_ensemble[:, inds_top_xval], axis=1)
+    preds = np.mean(predictions[:, inds_top_xval], axis=1)
     csv_write_helper("crossval_top_mean.csv", test_ids, preds)
     
     # median over top models from each cross-validation round
-    preds = np.median(predict_ensemble[:, inds_top_xval], axis=1)
+    preds = np.median(predictions[:, inds_top_xval], axis=1)
     csv_write_helper("crossval_top_median.csv", test_ids, preds)
 
     # mean over top percentile
     top_prc = np.percentile(models_loss, 20)
     inds_top_prc = [i for i, val in enumerate(models_loss) if val <= top_prc]
-    preds = np.mean(predict_ensemble[:, inds_top_prc], axis=1)
+    preds = np.mean(predictions[:, inds_top_prc], axis=1)
     csv_write_helper("prctle_top_mean.csv", test_ids, preds)
 
     # median over top percentile
-    preds = np.median(predict_ensemble[:, inds_top_prc], axis=1)
+    preds = np.median(predictions[:, inds_top_prc], axis=1)
     csv_write_helper("prctle_top_median.csv", test_ids, preds)
 
     # top model
