@@ -56,12 +56,12 @@ kaggle.util.extract_detections(PATH_TEST_DATA, test_csv,
 hyper_param = {
     # optimization
     "epochs" : 5,
-    "batch_sz": [8],
+    "batch_sz": [3],
     "optimizers": [keras.optimizers.Adam(1e-4)],
     "lr_scheduler_param": [(1e-4, 5, 10)],
     # architecture
     "dropout_rate": [0.5],
-    "batch_norm": [True, False],
+    "batch_norm": [False],
     "pool_type" : ["max", "mean", "both"]
     }
 
