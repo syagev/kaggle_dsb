@@ -36,43 +36,32 @@ def _get_model(optimizer, do_batch_norm, pool_type="max", dropout_rate=0.5):
             N_DETECTIONS: number of detections per patient (probably in [1,20])
     """
 
-    # convolutions with/out batch normalization
-    def Conv(*args, **kwargs):
-        
-        def Conv_(input):
-            if do_batch_norm:
-                return BatchNormalization()(Conv3D(*args, **kwargs)(input))
-            else:
-                return Conv3D(*args, **kwargs)(input)
-
-        return Conv_
-
     # set up the architecture
     inputs = Input((INPUT_SZ, INPUT_SZ, None, 1))
   
     # in: (B, 48, 48, N_SLICES x N_DETECTIONS, 1)
-    conv1 = Conv(32, (3, 3, 1), activation="relu", padding="same")(inputs)
-    conv1 = Conv(32, (3, 3, 1), activation="relu", padding="same")(conv1)
+    conv1 = Conv3D(32, (3, 3, 1), activation="relu", padding="same")(inputs)
+    conv1 = Conv3D(32, (3, 3, 1), activation="relu", padding="same")(conv1)
     pool1 = MaxPool3D(pool_size=(2, 2, 1))(conv1)
 
     # in: (B, 24, 24, N_SLICES x N_DETECTIONS, 32)
-    conv2 = Conv(64, (3, 3, 1), activation="relu", padding="same")(pool1)
-    conv2 = Conv(64, (3, 3, 1), activation="relu", padding="same")(conv2)
+    conv2 = Conv3D(64, (3, 3, 1), activation="relu", padding="same")(pool1)
+    conv2 = Conv3D(64, (3, 3, 1), activation="relu", padding="same")(conv2)
     pool2 = MaxPool3D(pool_size=(2, 2, 3))(conv2)
 
     # in: (B, 12, 12, N_SLICES/3 x N_DETECTIONS, 64)
-    conv3 = Conv(128, (3, 3, 1), activation="relu", padding="same")(pool2)
-    conv3 = Conv(128, (3, 3, 1), activation="relu", padding="same")(conv3)
+    conv3 = Conv3D(128, (3, 3, 1), activation="relu", padding="same")(pool2)
+    conv3 = Conv3D(128, (3, 3, 1), activation="relu", padding="same")(conv3)
     pool3 = MaxPool3D(pool_size=(2, 2, 3))(conv3)
 
     # in: (B, 6, 6, N_DETECTIONS, 128)
-    conv4 = Conv(256, (3, 3, 1), activation="relu", padding="same")(pool3)
-    conv4 = Conv(256, (3, 3, 1), activation="relu", padding="same")(conv4)
+    conv4 = Conv3D(256, (3, 3, 1), activation="relu", padding="same")(pool3)
+    conv4 = Conv3D(256, (3, 3, 1), activation="relu", padding="same")(conv4)
     pool4 = MaxPool3D(pool_size=(2, 2, 1))(conv4)
 
     # in: (B, 3, 3, N_DETECTIONS, 256)
-    conv5 = Conv(512, (3, 3, 1), activation="relu", padding="same")(pool4)
-    conv5 = Conv(512, (3, 3, 1), activation="relu", padding="same")(conv5)
+    conv5 = Conv3D(512, (3, 3, 1), activation="relu", padding="same")(pool4)
+    conv5 = Conv3D(512, (3, 3, 1), activation="relu", padding="same")(conv5)
     pool5 = MaxPool3D(pool_size=(3, 3, 1))(conv5)
 
     # in: (B, 1, 1, N_DETECTIONS, 512)
@@ -202,7 +191,7 @@ def _sample_generator(samples, path_data, batch_sz=8):
                 inds_shuffled = np.random.permutation(len(samples))
 
             # figure out batch's maximal 3-rd dim size
-            max_sz = 0
+            max_sz = 1 * N_SLICES
             for i in range(0, batch_sz):
                 if samples[inds_shuffled[i]][0] in fh5:
                     max_sz = max(fh5[samples[inds_shuffled[i]][0]].shape[-1]
