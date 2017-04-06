@@ -64,7 +64,6 @@ target/
 data
 images/plot
 submissions
-models
 *.name
 .idea/luna16.iml
 *.xml
