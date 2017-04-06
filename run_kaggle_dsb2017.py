@@ -66,6 +66,7 @@ hyper_param = {
     }
 
 models =[]
+session_id = os.path.basename(path_session)
 for i in range(0, N_CROSS_VAL):
 
     print("*** Training and cross validation {}/{}".format(i + 1, N_CROSS_VAL))
@@ -74,7 +75,6 @@ for i in range(0, N_CROSS_VAL):
     train, val = kaggle.classifier.split_train_val(PATH_TRAIN_LABELS,
                                                    seed=int(version, 16) + i)
 
-    session_id = os.path.basename(path_session)
     path_session_i = os.path.join(path_session, "{}_".format(i) + session_id)
     if not os.path.exists(path_session_i):
         os.mkdir(path_session_i)
@@ -88,6 +88,10 @@ for i in range(0, N_CROSS_VAL):
 
 
 # predict on test dir (stage-1 holdout and stage-2)
-# TODO: evaluate all models, consider different mixtures:
-#   average, median, voting, different subsets, etc
+test_ids = [os.path.splitext(id)[0] for id in os.listdir(PATH_TEST_PROCESSED)]
+kaggle.classifier.predict_ensemble(
+    models,
+    os.path.join(PATH_DATASETS, "stage1_detections_mock.hdf5"),
+    test_ids,
+    os.path.join(path_session))
 

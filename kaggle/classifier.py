@@ -171,7 +171,7 @@ def threadsafe_generator(f):
     return g
 
 @threadsafe_generator
-def _sample_generator(samples, path_data, batch_sz=8):
+def _sample_generator(samples, path_data, batch_sz=8, mode="train"):
     """Generates batches for training and validation.
 
     Args:
@@ -181,7 +181,10 @@ def _sample_generator(samples, path_data, batch_sz=8):
     Returns:
         (data, labels): batch with data and labels
     """
-    inds_shuffled = np.random.permutation(len(samples))
+    if mode == "train":
+        inds_shuffled = np.random.permutation(len(samples))
+    elif mode == "predict":
+        inds_shuffled = range(0, len(samples))
     
     with h5py.File(path_data, "r") as fh5:
         while True:
@@ -223,14 +226,21 @@ def _sample_generator(samples, path_data, batch_sz=8):
                     cube_i = np.dstack(cube_i)
                     data[i, :, :, 0:cube_i.shape[2]] = cube_i
 
-                    labels.append(samples[inds_shuffled[i]][1])
+                    if mode == "train":
+                        labels.append(samples[inds_shuffled[i]][1])
                 
                 else:
-                    labels.append(0)
+                    if mode == "train":
+                        labels.append(0)
                 
             inds_shuffled = np.delete(inds_shuffled, range(0, batch_sz))
 
-            yield np.expand_dims(data, axis=5), labels
+            if mode == "train":
+                output = (np.expand_dims(data, axis=5), labels)
+            elif mode == "predict":
+                output = np.expand_dims(data, axis=5)
+
+            yield output
 
 def train(trainset, valset, path_data, path_session, hyper_param):
     """Execute a single training task.
@@ -358,6 +368,88 @@ def load_ensemble(path):
             models.append(models_i)
 
     return models
+
+def predict_ensemble(models, path_data, test_ids, path_output):
+    """Predict an ensemble of models.
+
+    Args:
+        models: output from `train_ensemble` or `load_ensemble`
+        path_data: /path/to/detections.hdf5
+        test_ids: predict on these scan IDs
+        path_output: save predictions.csv to this path
+
+    Returns:
+        saves a collection of prediction.csv files to path_output
+    """
+
+    if not os.path.exists(path_output):
+        os.mkdir(path_output)
+    session_id = os.path.basename(path_output)
+
+    # predict all models
+    predictions = []
+    models_inds = []
+    models_loss = []
+    with h5py.File(path_data, "r") as fh5:
+        for i, models_crossval in enumerate(models):
+            for j, model_task in enumerate(models_crossval):
+                
+                # load the model
+                model = keras.models.load_model(model_task[0])
+
+                # predict
+                preds = model.predict_generator(
+                    _sample_generator([(id,) for id in test_ids], # req. tuple
+                                      path_data,
+                                      batch_sz=1,
+                                      mode="predict"),
+                    steps = 1)
+                predictions.append(preds)
+
+                # stats about model
+                models_inds.append((i, j))
+                models_loss.append(model_task[1])
+
+    # ----- several bagging regimes
+    predictions = np.concatenate(predictions, axis=1)
+    def csv_write_helper(filename, ids, vals):
+        filename = "{}_{}".format(session_id, filename)
+        with open(os.path.join(path_output, filename), "w", newline="") as f:
+            wr = csv.writer(f)
+            wr.writerow(("id", "cancer"))
+            for id, val in zip(ids, vals):
+                wr.writerow((id, "%.2f" % np.round(val, 2)))
+
+    # mean over all predictions
+    preds = np.mean(predict_ensemble, axis=1)
+    csv_write_helper("ensemble_mean.csv", test_ids, preds)
+
+    # median over all predictions
+    preds = np.median(predict_ensemble, axis=1)
+    csv_write_helper("ensemble_median.csv", test_ids, preds)
+
+    # mean over top models from each cross-validation round
+    inds_top_xval = [i for i, inds in enumerate(models_inds) if inds[1] == 0]
+    preds = np.mean(predict_ensemble[:, inds_top_xval], axis=1)
+    csv_write_helper("crossval_top_mean.csv", test_ids, preds)
+    
+    # median over top models from each cross-validation round
+    preds = np.median(predict_ensemble[:, inds_top_xval], axis=1)
+    csv_write_helper("crossval_top_median.csv", test_ids, preds)
+
+    # mean over top percentile
+    top_prc = np.percentile(models_loss, 20)
+    inds_top_prc = [i for i, val in enumerate(models_loss) if val <= top_prc]
+    preds = np.mean(predict_ensemble[:, inds_top_prc], axis=1)
+    csv_write_helper("prctle_top_mean.csv", test_ids, preds)
+
+    # median over top percentile
+    preds = np.median(predict_ensemble[:, inds_top_prc], axis=1)
+    csv_write_helper("prctle_top_median.csv", test_ids, preds)
+
+    # top model
+    ind_best = np.argmin(models_loss)
+    csv_write_helper("best_model.csv", test_ids, predictions[:, ind_best])
 
 def train_ensemble(trainset, valset, path_data, path_session, hyper_param):
     """Train an ensemble of models per set of hyper param.
