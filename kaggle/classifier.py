@@ -267,10 +267,10 @@ def train(trainset, valset, path_data, path_session, hyper_param):
                        dropout_rate=hyper_param["dropout_rate"])
     history = model.fit_generator(
         _sample_generator(trainset, path_data, hyper_param["batch_sz"]),
-        steps_per_epoch=3, #int(len(trainset) / hyper_param["batch_sz"]),
+        steps_per_epoch=int(len(trainset) / hyper_param["batch_sz"]),
         epochs=hyper_param["epochs"],
         validation_data=_sample_generator(valset, path_data, 2),
-        validation_steps=3, #int(len(valset) / 2),
+        validation_steps=int(len(valset) / 2),
         callbacks=[model_cp, hyper_param["lr_schedule"]],
         verbose=1,
         workers=4)
