@@ -1,0 +1,1837 @@
+// MDL v1 utf8
+network  {
+  watchlist = ""
+}
+module View3D {
+  internal  {
+    frame = "1057 -499 144 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "87 326 939 655"
+        sizeHint = "939 645"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = View3D2
+    autoViewAll = TRUE
+    inventorInputOn = TRUE
+    inventorOutputOn = FALSE
+    lutType = Ramp
+    currentTimePoint = 0
+    staticSamplingRate = 1
+    quality = 1
+    lutEditorColorPoints = "[ 0 0 0 0, 4095 1 1 1 ]"
+    lutEditorAlphaPoints = "[ 0 0, 4095 1 ]"
+    lutEditorRelativeLut = FALSE
+    lutEditorColorInterpolation = InterpolateRGB
+    lutEditorAlphaFactor = 1
+    orientationProjectionType = PERSPECTIVE
+    orientationLocation = LOWER_RIGHT
+    orientationOn = TRUE
+    orientationModel = CUBE
+    greyCenter = 0.377500116825104
+    greyWidth = 0.747499763965607
+    alphaFactor = 1
+    colorFactor = "1 1 1"
+    camType = TRUE
+    camPosition = "-78.0044708251953 -446.877838134766 -504.793731689453"
+    camOrientation = "-0.96412456035614 -0.213837951421738 0.15728098154068 4.00802850723267"
+    initialCameraOrientation = CAMERA_KEEP_AS_IS
+    camFar = 786.25079
+    camNear = 374.46445
+    camFocal = 580.15234
+    camHeight = 0.78539801
+    decoration = FALSE
+    hiResRendering = TRUE
+    annotations = TRUE
+    background = TRUE
+    mode = VolumeRendering
+    interactiveQuality = Medium
+  }
+  internalFields  {
+    renderer.gradientQuality = GradientQualityAutomatic
+    renderer.enhancementAlphaMix = 0.25
+    renderer.boundaryEnhancement = FALSE
+    renderer.boundaryEnhancementFactor = 1
+    renderer.boundaryEnhancementExponent = 1
+    renderer.boundaryEnhancementGradientBias = 0
+    renderer.silhouetteEnhancement = FALSE
+    renderer.silhouetteEnhancementExponent = 1
+    renderer.silhouetteEnhancementFactor = 1
+    renderer.toneShading = FALSE
+    renderer.toneShadingWarmColor = "0.67451000213623 0.533333003520966 0.141176000237465"
+    renderer.toneShadingColdColor = "0 0 0.400000005960464"
+    renderer.toneShadingWarmDiffuse = 0.60000002
+    renderer.toneShadingColdDiffuse = 0.2
+    renderer.toneShadingAngle = 45
+    renderer.materialAmbient = 0.60000002
+    renderer.materialDiffuse = 1
+    renderer.materialSpecular = 1
+    renderer.materialSpecularity = 32
+    renderer.light1Enabled = TRUE
+    renderer.light1DiffuseIntensity = 1
+    renderer.light1SpecularIntensity = 1
+    renderer.light1Color = "1 1 1"
+    renderer.light1PolarPhi = 45
+    renderer.light1PolarRho = 0
+    renderer.light2Enabled = FALSE
+    renderer.light2DiffuseIntensity = 1
+    renderer.light2SpecularIntensity = 1
+    renderer.light2Color = "1 1 1"
+    renderer.light2PolarPhi = 0
+    renderer.light2PolarRho = 0
+    renderer.light3Enabled = FALSE
+    renderer.light3DiffuseIntensity = 1
+    renderer.light3SpecularIntensity = 1
+    renderer.light3Color = "1 1 1"
+    renderer.light3PolarPhi = -45
+    renderer.light3PolarRho = 0
+    renderer.sizeOutputX = 512
+    renderer.sizeOutputY = 512
+    renderer.sizeOutputZ = 433
+    renderer.subVolumeStartX = 0
+    renderer.subVolumeStartY = 0
+    renderer.subVolumeStartZ = 0
+    renderer.subVolumeEndX = 512
+    renderer.subVolumeEndY = 512
+    renderer.subVolumeEndZ = 433
+    clip.hideGeometry = FALSE
+    clip.on = FALSE
+    clip.left = FALSE
+    clip.right = FALSE
+    clip.top = FALSE
+    clip.bottom = FALSE
+    clip.rear = FALSE
+    clip.front = FALSE
+    clip.translation0 = "1 0 0"
+    clip.translation1 = "-1 0 0"
+    clip.translation2 = "0 1 0"
+    clip.translation3 = "0 -1 0"
+    clip.translation4 = "0 0 1"
+    clip.translation5 = "0 0 -1"
+    clip.rotation0 = "0 0 0.999999940395355 1.57079994678497"
+    clip.rotation1 = "0 0 -0.999999940395355 1.57079994678497"
+    clip.rotation2 = "0 0 -1 3.1415901184082"
+    clip.rotation3 = "0 0 1 0"
+    clip.rotation4 = "-0.999999940395355 0 0 1.57079994678497"
+    clip.rotation5 = "0.999999940395355 0 0 1.57079994678497"
+  }
+}
+module View3D {
+  internal  {
+    frame = "1149 -322 144 56"
+    moduleGroupName = "Lung fill"
+    windows  {
+      window _default {
+        geometry = "692 232 939 645"
+        sizeHint = "939 645"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = View3D5
+    autoViewAll = TRUE
+    inventorInputOn = TRUE
+    inventorOutputOn = FALSE
+    lutType = Ramp
+    currentTimePoint = 0
+    staticSamplingRate = 1
+    quality = 1
+    lutEditorColorPoints = "[ 0 0 0 0, 4095 1 1 1 ]"
+    lutEditorAlphaPoints = "[ 0 0, 4095 1 ]"
+    lutEditorRelativeLut = FALSE
+    lutEditorColorInterpolation = InterpolateRGB
+    lutEditorAlphaFactor = 1
+    orientationProjectionType = PERSPECTIVE
+    orientationLocation = LOWER_RIGHT
+    orientationOn = TRUE
+    orientationModel = CUBE
+    greyCenter = 0.889999687671661
+    greyWidth = 0.829999804496765
+    alphaFactor = 1
+    colorFactor = "1 1 1"
+    camType = TRUE
+    camPosition = "-380.215270996094 468.943420410156 -98.1295471191406"
+    camOrientation = "-0.439336508512497 0.510508298873901 0.73916482925415 3.06187152862549"
+    initialCameraOrientation = CAMERA_KEEP_AS_IS
+    camFar = 789.57489
+    camNear = 371.14722
+    camFocal = 580.15234
+    camHeight = 0.78539801
+    decoration = FALSE
+    hiResRendering = TRUE
+    annotations = TRUE
+    background = TRUE
+    mode = VolumeRendering
+    interactiveQuality = Medium
+  }
+  internalFields  {
+    renderer.gradientQuality = GradientQualityAutomatic
+    renderer.enhancementAlphaMix = 0.25
+    renderer.boundaryEnhancement = FALSE
+    renderer.boundaryEnhancementFactor = 1
+    renderer.boundaryEnhancementExponent = 1
+    renderer.boundaryEnhancementGradientBias = 0
+    renderer.silhouetteEnhancement = FALSE
+    renderer.silhouetteEnhancementExponent = 1
+    renderer.silhouetteEnhancementFactor = 1
+    renderer.toneShading = FALSE
+    renderer.toneShadingWarmColor = "0.67451000213623 0.533333003520966 0.141176000237465"
+    renderer.toneShadingColdColor = "0 0 0.400000005960464"
+    renderer.toneShadingWarmDiffuse = 0.60000002
+    renderer.toneShadingColdDiffuse = 0.2
+    renderer.toneShadingAngle = 45
+    renderer.materialAmbient = 0.60000002
+    renderer.materialDiffuse = 1
+    renderer.materialSpecular = 1
+    renderer.materialSpecularity = 32
+    renderer.light1Enabled = TRUE
+    renderer.light1DiffuseIntensity = 1
+    renderer.light1SpecularIntensity = 1
+    renderer.light1Color = "1 1 1"
+    renderer.light1PolarPhi = 45
+    renderer.light1PolarRho = 0
+    renderer.light2Enabled = FALSE
+    renderer.light2DiffuseIntensity = 1
+    renderer.light2SpecularIntensity = 1
+    renderer.light2Color = "1 1 1"
+    renderer.light2PolarPhi = 0
+    renderer.light2PolarRho = 0
+    renderer.light3Enabled = FALSE
+    renderer.light3DiffuseIntensity = 1
+    renderer.light3SpecularIntensity = 1
+    renderer.light3Color = "1 1 1"
+    renderer.light3PolarPhi = -45
+    renderer.light3PolarRho = 0
+    renderer.sizeOutputX = 512
+    renderer.sizeOutputY = 512
+    renderer.sizeOutputZ = 433
+    renderer.subVolumeStartX = 0
+    renderer.subVolumeStartY = 0
+    renderer.subVolumeStartZ = 0
+    renderer.subVolumeEndX = 512
+    renderer.subVolumeEndY = 512
+    renderer.subVolumeEndZ = 433
+    clip.hideGeometry = FALSE
+    clip.on = FALSE
+    clip.left = FALSE
+    clip.right = FALSE
+    clip.top = FALSE
+    clip.bottom = FALSE
+    clip.rear = FALSE
+    clip.front = FALSE
+    clip.translation0 = "1 0 0"
+    clip.translation1 = "-1 0 0"
+    clip.translation2 = "0 1 0"
+    clip.translation3 = "0 -1 0"
+    clip.translation4 = "0 0 1"
+    clip.translation5 = "0 0 -1"
+    clip.rotation0 = "0 0 0.999999940395355 1.57079994678497"
+    clip.rotation1 = "0 0 -0.999999940395355 1.57079994678497"
+    clip.rotation2 = "0 0 -1 3.1415901184082"
+    clip.rotation3 = "0 0 1 0"
+    clip.rotation4 = "-0.999999940395355 0 0 1.57079994678497"
+    clip.rotation5 = "0.999999940395355 0 0 1.57079994678497"
+  }
+}
+module CacheView {
+  internal  {
+    frame = "-103 749 96 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "813 483 329 172"
+        sizeHint = "309 172"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = CacheView
+    autoCompute = FALSE
+  }
+}
+module Arithmetic2 {
+  internal  {
+    frame = "764 358 144 80"
+    moduleGroupName = "Remove outside"
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "791 522 353 94"
+        sizeHint = "353 94"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Combine_Regions2
+    function = Max
+    outputImageSize = InvalidateOutputIfSizesDiffer
+    constant = 0
+    autoReplicate = FALSE
+  }
+}
+module Arithmetic1 {
+  internal  {
+    frame = "1024 464 112 72"
+    moduleGroupName = "Remove outside"
+    showNetworkPanel = true
+    windows  {
+      window _default {
+        geometry = "723 528 285 64"
+        sizeHint = "283 64"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Arithmetic1
+    function = Multiply
+    constant = 1
+  }
+}
+module RegionGrowing {
+  internal  {
+    frame = "1028 580 120 64"
+    moduleGroupName = "Remove outside"
+    windows  {
+      window _default {
+        geometry = "318 171 573 591"
+        sizeHint = "573 591"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Back_Center
+    autoUpdateMode = AutoUpdate
+    lowerThreshold = 0.95
+    upperThreshold = 1.05
+    enableAutoThresholdInterval = TRUE
+    basicNeighborhoodType = BNBH_3D_6_XYZ
+    extendedNeighborhoodType = ENBH_2D_4_XY
+    useAdditionalSeed = TRUE
+    additionalSeed = "246 511 0 0 0 0"
+    additionalSeedType = 0
+    additionalSeedCoordSystem = VoxelCoordinates
+    initStackSizeTweak = 0.100000001490116
+    prohibitInputScalingTweak = FALSE
+    incrementalUpdateMode = Smart
+    useExtendedNBH = FALSE
+    calcBoundaryOverlap = FALSE
+    unitType = UnitTypeGrayValue
+    internalAccuracy = Auto
+    autoUpdateUnitType = FALSE
+    stretchOutputOverTime = FALSE
+    showPartialResults = FALSE
+    acceptedMarkerType = -1
+    autoSelectHigherCoords = TRUE
+    cCoord = 0
+    uCoord = 0
+    posFillValue = -1
+    negFillValue = 0
+    invertResult = FALSE
+    showOuterBoundariesOnly = FALSE
+    upperVolumeLimit_ml = 100
+    enableUpperVolumeLimit = FALSE
+    autoThresholdIntervalSizeInPercent = 5
+  }
+}
+module StringUtils {
+  internal  {
+    frame = "493 641 152 64"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "226 425 370 331"
+        sizeHint = "370 331"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Back_Center_Position
+    operationType = Concatenate
+    string1 = 246
+    string2 = 511
+    string3 = ""
+    string4 = ""
+    string5 = ""
+    string6 = ""
+    stringPrefix = [
+    stringPostfix = ]
+    toggle1 = TRUE
+    toggle2 = TRUE
+    toggle3 = FALSE
+    toggle4 = FALSE
+    toggle5 = FALSE
+    toggle6 = FALSE
+    togglePrefix = FALSE
+    togglePostfix = FALSE
+    separator = ""
+    selectSeparator = 1
+    toggleIgnoreCase = FALSE
+    inPos1 = 0
+    inPos2 = 0
+  }
+}
+module GetVoxelValue {
+  internal  {
+    frame = "720 724 144 64"
+    moduleGroupName = "Remove outside"
+    windows  {
+      window _default {
+        geometry = "184 126 301 281"
+        sizeHint = "301 281"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Back_Center_Is_Air
+    position = "246 511 0 0 0 0"
+    updateMode = AutoUpdate
+    coordinateType = Voxel
+  }
+}
+module View3D {
+  internal  {
+    frame = "1156 754 144 56"
+    moduleGroupName = "Remove outside"
+    windows  {
+      window _default {
+        geometry = "238 345 939 657"
+        sizeHint = "939 645"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = View3D
+    autoViewAll = TRUE
+    inventorInputOn = TRUE
+    inventorOutputOn = FALSE
+    lutType = Ramp
+    currentTimePoint = 0
+    staticSamplingRate = 1
+    quality = 1
+    lutEditorColorPoints = "[ 0 0 0 0, 4095 1 1 1 ]"
+    lutEditorAlphaPoints = "[ 0 0, 4095 1 ]"
+    lutEditorRelativeLut = FALSE
+    lutEditorColorInterpolation = InterpolateRGB
+    lutEditorAlphaFactor = 1
+    orientationProjectionType = PERSPECTIVE
+    orientationLocation = LOWER_RIGHT
+    orientationOn = TRUE
+    orientationModel = CUBE
+    greyCenter = 1
+    greyWidth = 0
+    alphaFactor = 1
+    colorFactor = "1 1 1"
+    camType = TRUE
+    camPosition = "577.967590332031 12.5631895065308 182.780456542969"
+    camOrientation = "-0.418718099594116 -0.514175713062286 -0.748530924320221 4.66879367828369"
+    initialCameraOrientation = CAMERA_KEEP_AS_IS
+    camFar = 909.27899
+    camNear = 451.28238
+    camFocal = 680.05225
+    camHeight = 0.78539801
+    decoration = FALSE
+    hiResRendering = TRUE
+    annotations = TRUE
+    background = TRUE
+    mode = VolumeRendering
+    interactiveQuality = Medium
+  }
+  internalFields  {
+    renderer.gradientQuality = GradientQualityAutomatic
+    renderer.enhancementAlphaMix = 0.25
+    renderer.boundaryEnhancement = FALSE
+    renderer.boundaryEnhancementFactor = 1
+    renderer.boundaryEnhancementExponent = 1
+    renderer.boundaryEnhancementGradientBias = 0
+    renderer.silhouetteEnhancement = FALSE
+    renderer.silhouetteEnhancementExponent = 1
+    renderer.silhouetteEnhancementFactor = 1
+    renderer.toneShading = FALSE
+    renderer.toneShadingWarmColor = "0.67451000213623 0.533333003520966 0.141176000237465"
+    renderer.toneShadingColdColor = "0 0 0.400000005960464"
+    renderer.toneShadingWarmDiffuse = 0.60000002
+    renderer.toneShadingColdDiffuse = 0.2
+    renderer.toneShadingAngle = 45
+    renderer.materialAmbient = 0.60000002
+    renderer.materialDiffuse = 1
+    renderer.materialSpecular = 1
+    renderer.materialSpecularity = 32
+    renderer.light1Enabled = TRUE
+    renderer.light1DiffuseIntensity = 1
+    renderer.light1SpecularIntensity = 1
+    renderer.light1Color = "1 1 1"
+    renderer.light1PolarPhi = 45
+    renderer.light1PolarRho = 0
+    renderer.light2Enabled = FALSE
+    renderer.light2DiffuseIntensity = 1
+    renderer.light2SpecularIntensity = 1
+    renderer.light2Color = "1 1 1"
+    renderer.light2PolarPhi = 0
+    renderer.light2PolarRho = 0
+    renderer.light3Enabled = FALSE
+    renderer.light3DiffuseIntensity = 1
+    renderer.light3SpecularIntensity = 1
+    renderer.light3Color = "1 1 1"
+    renderer.light3PolarPhi = -45
+    renderer.light3PolarRho = 0
+    renderer.sizeOutputX = 512
+    renderer.sizeOutputY = 512
+    renderer.sizeOutputZ = 433
+    renderer.subVolumeStartX = 0
+    renderer.subVolumeStartY = 0
+    renderer.subVolumeStartZ = 0
+    renderer.subVolumeEndX = 512
+    renderer.subVolumeEndY = 512
+    renderer.subVolumeEndZ = 433
+    clip.hideGeometry = FALSE
+    clip.on = FALSE
+    clip.left = FALSE
+    clip.right = FALSE
+    clip.top = FALSE
+    clip.bottom = FALSE
+    clip.rear = FALSE
+    clip.front = FALSE
+    clip.translation0 = "1 0 0"
+    clip.translation1 = "-1 0 0"
+    clip.translation2 = "0 1 0"
+    clip.translation3 = "0 -1 0"
+    clip.translation4 = "0 0 1"
+    clip.translation5 = "0 0 -1"
+    clip.rotation0 = "0 0 0.999999940395355 1.57079994678497"
+    clip.rotation1 = "0 0 -0.999999940395355 1.57079994678497"
+    clip.rotation2 = "0 0 -1 3.1415901184082"
+    clip.rotation3 = "0 0 1 0"
+    clip.rotation4 = "-0.999999940395355 0 0 1.57079994678497"
+    clip.rotation5 = "0.999999940395355 0 0 1.57079994678497"
+  }
+}
+module StringUtils {
+  internal  {
+    frame = "65 829 96 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "782 404 370 331"
+        sizeHint = "370 331"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = StringUtils3
+    operationType = Concatenate
+    string1 = $(NETWORK)/
+    string2 = 1.3.6.1.4.1.14519.5.2.1.6279.6001.970264865033574190975654369557.mhd
+    string3 = ""
+    string4 = ""
+    string5 = ""
+    string6 = ""
+    stringPrefix = [
+    stringPostfix = ]
+    toggle1 = TRUE
+    toggle2 = TRUE
+    toggle3 = FALSE
+    toggle4 = FALSE
+    toggle5 = FALSE
+    toggle6 = FALSE
+    togglePrefix = FALSE
+    togglePostfix = FALSE
+    separator = ""
+    selectSeparator = 0
+    toggleIgnoreCase = FALSE
+    inPos1 = 0
+    inPos2 = 0
+  }
+}
+module FieldIterator {
+  internal  {
+    frame = "-111 829 96 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "1063 105 415 317"
+        sizeHint = "415 317"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = FieldIterator
+    fieldNames = ""
+    fieldValues = "1.3.6.1.4.1.14519.5.2.1.6279.6001.100684836163890911914061745866.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.104562737760173137525888934217.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.106719103982792863757268101375.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.108231420525711026834210228428.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.111017101339429664883879536171.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.113697708991260454310623082679.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.114218724025049818743426522343.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.121824995088859376862458155637.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.128059192202504367870633619224.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.128881800399702510818644205032.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.134370886216012873213579659366.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.139595277234735528205899724196.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.140527383975300992150799777603.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.144943344795414353192059796098.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.145759169833745025756371695397.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.146603910507557786636779705509.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.152684536713461901635595118048.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.161002239822118346732951898613.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.161073793312426102774780216551.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.162207236104936931957809623059.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.162718361851587451505896742103.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.162901839201654862079549658100.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.163994693532965040247348251579.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.168037818448885856452592057286.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.168605638657404145360275453085.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.169128136262002764211589185953.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.171919524048654494439256263785.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.173106154739244262091404659845.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.179049373636438705059720603192.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.179162671133894061547290922949.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.183184435049555024219115904825.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.183843376225716802567192412456.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.184019785706727365023450012318.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.186021279664749879526003668137.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.193408384740507320589857096592.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.193808128386712859512130599234.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.197987940182806628828566429132.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.200558451375970945040979397866.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.206539885154775002929031534291.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.208737629504245244513001631764.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.216652640878960522552873394709.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.222087811960706096424718056430.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.226456162308124493341905600418.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.231002159523969307155990628066.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.231834776365874788440767645596.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.243094273518213382155770295147.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.247769845138587733933485039556.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.250397690690072950000431855143.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.259018373683540453277752706262.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.259543921154154401875872845498.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.270390050141765094612147226290.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.272961322147784625028175033640.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.275766318636944297772360944907.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.282512043257574309474415322775.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.286647622786041008124419915089.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.287966244644280690737019247886.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.300271604576987336866436407488.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.306948744223170422945185006551.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.308183340111270052562662456038.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.309672797925724868457151381131.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.310395752124284049604069960014.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.314789075871001236641548593165.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.315214756157389122376518747372.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.325164338773720548739146851679.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.326057189095429101398977448288.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.331211682377519763144559212009.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.334105754605642100456249422350.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.335866409407244673864352309754.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.336894364358709782463716339027.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.458525794434429386945463560826.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.479402560265137632920333093071.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.503980049263254396021509831276.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.561458563853929400124470098603.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.616033753016904899083676284739.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.655242448149322898770987310561.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.663019255629770796363333877035.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.674809958213117379592437424616.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.690929968028676628605553365896.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.756684168227383088294595834066.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.768276876111112560631432843476.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.801945620899034889998809817499.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.802595762867498341201607992711.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.861997885565255340442123234170.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.888291896309937415860209787179.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.892375496445736188832556446335.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.910607280658963002048724648683.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.935683764293840351008008793409.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.952265563663939823135367733681.mhd
+1.3.6.1.4.1.14519.5.2.1.6279.6001.970264865033574190975654369557.mhd"
+    fieldSeparator = [,;]
+    valueSeparator = "\\n\\r|\\r\\n|[\\n\\r\\\\]"
+    valueHeader = FALSE
+    indexTranslation = 0
+    newValueEnable = TRUE
+    verbose = TRUE
+    curIndex = 88
+    delay = 15
+    autoReset = FALSE
+    loop = FALSE
+  }
+}
+module FileDirectory {
+  internal  {
+    frame = "-251 837 104 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "1161 129 501 564"
+        sizeHint = "495 564"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = FileDirectory
+    rootPath = $(NETWORK)/
+    recursive = FALSE
+    maxRecursionDepth = -1
+    fileType = Files
+    joinImagePairs = FALSE
+    include = "**.mhd*"
+    includeRegExp = FALSE
+    predefined = void
+    exclude = ""
+    excludeRegExp = FALSE
+    ignoreCase = TRUE
+    dirMode = Relative
+  }
+}
+module OrthoView2D {
+  internal  {
+    frame = "1229 -499 120 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "767 354 400 430"
+        sizeHint = "400 430"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = OrthoView2D
+    inventorInputOn = TRUE
+    inventorOutputOn = FALSE
+    synchronizePosition = TRUE
+    layout = LAYOUT_CUBE_EQUAL
+    filterMode = FILTER_LINEAR
+    synchronizeZoom = TRUE
+    synchronizePanning = FALSE
+    useGlobalInputImage = TRUE
+    snapToCenter = FALSE
+    alternCubeLayout = FALSE
+    timePoint = 0
+    useManagedInteraction = FALSE
+    enableSlicing = TRUE
+    borderOn = TRUE
+    borderColor = "0.899999976158142 0.899999976158142 0.899999976158142"
+    grayWidth = 2
+    grayCenter = 1
+    annotationOn = TRUE
+    annotationSizeMode = ANNO_SHOW_DETAILED
+    annotationFontSize = ANNO_SIZE_AUTO
+    valueHighPrecision = TRUE
+    annoCoords = Voxel
+    showCurrentPos = TRUE
+    worldPosition = "26.9397888183594 -133.292388916016 -178.230239868164"
+    coloredMode = FALSE
+    hiResRendering = TRUE
+  }
+}
+module Histogram {
+  internal  {
+    frame = "-91 661 88 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "41 203 431 206"
+        sizeHint = "431 206"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Histogram
+    useMask = FALSE
+    xRange = "Dynamic Min/Max"
+    maskMode = Labels
+    curveType = Line
+    curveStyle = 0
+    curveTitle = ""
+    updateMode = Off
+    useStepFunction = FALSE
+    useBinSizeOneRepresentation = TRUE
+    useBackgroundValue = FALSE
+    backgroundValue = 0
+    binSize = 1
+    maxBinCount = 25000000
+  }
+}
+module StylePalette {
+  internal  {
+    frame = "5 661 104 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "70 89 632 433"
+        sizeHint = "632 433"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = StylePalette0
+    color1 = "1 1 0"
+    color2 = "1 0 0"
+    color3 = "0 0 1"
+    color4 = "0 1 0"
+    color5 = "1 0.5 0"
+    color6 = "1 0 1"
+    color7 = "0 1 1"
+    color8 = "0.5 1 0.5"
+    color9 = "1 0 0.5"
+    color10 = "0.5 1 0"
+    color11 = "0.5 0 1"
+    color12 = "0 1 0.5"
+    lineStyle1 = Solid
+    lineStyle2 = Solid
+    lineStyle3 = Solid
+    lineStyle4 = Solid
+    lineStyle5 = Solid
+    lineStyle6 = Solid
+    lineStyle7 = Solid
+    lineStyle8 = Solid
+    lineStyle9 = Solid
+    lineStyle10 = Solid
+    lineStyle11 = Solid
+    lineStyle12 = Solid
+    lineWidth1 = 1
+    lineWidth2 = 1
+    lineWidth3 = 1
+    lineWidth4 = 1
+    lineWidth5 = 1
+    lineWidth6 = 1
+    lineWidth7 = 1
+    lineWidth8 = 1
+    lineWidth9 = 1
+    lineWidth10 = 1
+    lineWidth11 = 1
+    lineWidth12 = 1
+    markerType1 = None
+    markerType2 = None
+    markerType3 = None
+    markerType4 = None
+    markerType5 = None
+    markerType6 = None
+    markerType7 = None
+    markerType8 = None
+    markerType9 = None
+    markerType10 = None
+    markerType11 = None
+    markerType12 = None
+    markerSize1 = 10
+    markerSize2 = 10
+    markerSize3 = 10
+    markerSize4 = 10
+    markerSize5 = 10
+    markerSize6 = 10
+    markerSize7 = 10
+    markerSize8 = 10
+    markerSize9 = 10
+    markerSize10 = 10
+    markerSize11 = 10
+    markerSize12 = 10
+    antiAlias1 = FALSE
+    antiAlias2 = FALSE
+    antiAlias3 = FALSE
+    antiAlias4 = FALSE
+    antiAlias5 = FALSE
+    antiAlias6 = FALSE
+    antiAlias7 = FALSE
+    antiAlias8 = FALSE
+    antiAlias9 = FALSE
+    antiAlias10 = FALSE
+    antiAlias11 = FALSE
+    antiAlias12 = FALSE
+    name1 = ""
+    name2 = ""
+    name3 = ""
+    name4 = ""
+    name5 = ""
+    name6 = ""
+    name7 = ""
+    name8 = ""
+    name9 = ""
+    name10 = ""
+    name11 = ""
+    name12 = ""
+    currentStyle = 0
+    currentColor = "1 1 1"
+    currentLineStyle = None
+    currentLineWidth = 1
+    currentMarkerType = None
+    currentMarkerSize = 4
+    currentAntiAlias = FALSE
+    currentName = ""
+    reservedEntries = 1
+  }
+}
+module SoRenderArea {
+  internal  {
+    frame = "-87 445 112 56"
+    moduleGroupName = ""
+    windows  {
+      window _viewer {
+        geometry = "204 244 500 400"
+        sizeHint = "400 400"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = SoRenderArea
+    renderCaching = AUTO
+    boundingBoxCaching = AUTO
+    renderCulling = AUTO
+    pickCulling = AUTO
+    border = FALSE
+    background = "0 0 0"
+    transparency = DELAYED_BLEND
+    antialiasing = FALSE
+    antialiasingNumPasses = 1
+    hiResRendering = TRUE
+    useSampleBuffers = FALSE
+    numSamples = 8
+    grabKeyFocus = TRUE
+    enableKeyCommands = TRUE
+    snapshotFormat = SNAPSHOT_RGB
+    outputAviFile = ""
+    autoRedrawWhenRecording = TRUE
+    frameRate = 7
+    frameRateAvi = 15
+    outputSnapshotFile = none
+    outputSnapshotFileWritten = none
+    autoIncreaseFile = TRUE
+    showSnapshotWithShell = FALSE
+    snapCount = 0
+    inputDevicesList = ""
+  }
+}
+module SoDiagram2D {
+  internal  {
+    frame = "-79 533 112 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "789 134 543 582"
+        sizeHint = "543 582"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = SoDiagram2D
+    minX = -1224
+    maxX = 571
+    minY = 0
+    maxY = 100000
+    scaleX = 1
+    scaleY = 1
+    autoRangeX = FALSE
+    autoRangeY = FALSE
+    axisColor = "1 1 1"
+    axisRotation = AXIS_ROTATION_LEFT_BOTTOM
+    titleFontHeight = 14
+    drawDiagramTitle = FALSE
+    diagramTitleString = ""
+    drawGrid = FALSE
+    gridColor = "0.349999994039536 0.349999994039536 0.349999994039536"
+    drawLegend = FALSE
+    legendPlacement = LEGEND_UPPER_RIGHT
+    legendFontHeight = 12
+    autoLimitLegendFontHeight = FALSE
+    zoomAnimationEase = 0.5
+    zoomAnimationEpsilon = 0.0099999998
+    useZoomRestrictions = FALSE
+    minZoomFactor = 0.1
+    maxZoomFactor = 10
+    drawChildrenExtensions = TRUE
+    forwardEventsToChildrenExtensions = TRUE
+    changeLineOpacityForHighlightedCurves = FALSE
+    curveLineOpacityHighlighted = 1
+    changeAreaOpacityForHighlightedCurves = FALSE
+    curveAreaOpacityHighlighted = 1
+    changeLineOpacityForNotHighlightedCurves = FALSE
+    curveLineOpacityNotHighlighted = 0.30000001
+    changeAreaOpacityForNotHighlightedCurves = FALSE
+    curveAreaOpacityNotHighlighted = 0.30000001
+    changeLineStyleForHighlightedCurves = FALSE
+    curveLineStyleHighlighted = 1
+    changeLineStyleForNotHighlightedCurves = FALSE
+    curveLineStyleNotHighlighted = 1
+    curveIndexHighlighted = ""
+    reorderHighlightedCurves = FALSE
+    borderH = 53
+    borderV = 27
+    autoBorderH = TRUE
+    autoBorderV = TRUE
+    drawAxisX = TRUE
+    drawAxisY = TRUE
+    drawTicksX = TRUE
+    drawTicksY = TRUE
+    drawLabelsX = TRUE
+    drawLabelsY = TRUE
+    drawAxisTitleX = FALSE
+    drawAxisTitleY = FALSE
+    axisTitleStringX = "X [dn]"
+    axisTitleStringY = "Y [dn]"
+    axisTitleFontHeightX = 12
+    axisTitleFontHeightY = 12
+    axisLabelFontHeightX = 12
+    axisLabelFontHeightY = 12
+    tickMinDistance = 30
+    curveColor = "1 1 1"
+    lineStyle = LINE_STYLE_SOLID
+    markerType = MARKER_TYPE_NONE
+    markerSize = 10
+    lineWidth = 5
+    antiAlias = TRUE
+    areaOpacity = 0.5
+    lineOpacity = 1
+    stylePaletteMode = STYLE_PALETTE_INDEX
+  }
+}
+module View2D {
+  internal  {
+    frame = "1099 248 120 56"
+    moduleGroupName = "Remove outside"
+    windows  {
+      window _default {
+        geometry = "207 207 1185 775"
+        sizeHint = "400 400"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = View2D1
+    inventorInputOn = TRUE
+    inventorOutputOn = FALSE
+    view2DExtensionsOn = TRUE
+    startSlice = 0
+    numSlices = 1
+    numXSlices = 1
+    sliceStep = 1
+    slab = 1
+    blendMode = BLEND_REPLACE
+    timePoint = 0
+    maxTimePoint = 0
+    filterMode = FILTER_LINEAR
+    standardKeys = TRUE
+    cineMode = CINE_Z
+    cineDirection = CINE_PINGPONG
+    cineRepeat = CINE_ONCE
+    cineSpeed = 0.1
+    cineAlwaysReset = TRUE
+    snapToCenter = FALSE
+    zoomMode = VIEW2D_AUTO_ZOOM
+    unzoomOnImageChange = FALSE
+    sliceZoom = 1
+    sliceZoomSynced = 1
+    baseColor = "1 1 1"
+    margin = "2 2"
+    sliceOrigin = "0 0"
+    useShaders = TRUE
+    useManagedInteraction = FALSE
+    lutCenter = 0
+    lutWidth = 2
+    annotationOn = TRUE
+    annotationMode = ANNO_MODE_AUTO
+    annotationSizeMode = ANNO_SHOW_DETAILED
+    annotationCol = "0.899999976158142 0.899999976158142 0.899999976158142"
+    annotationFontSize = ANNO_SIZE_AUTO
+    annoCoords = Voxel
+    annoCTValue = AsIs
+    borderOn = FALSE
+    borderColor = "0.899999976158142 0.899999976158142 0.899999976158142"
+    valueHighPrecision = TRUE
+    maxPrecision = 4
+    enableSlicing = TRUE
+    useRelativeLUTIfNoInputImage = FALSE
+    hiResRendering = TRUE
+  }
+}
+module Arithmetic2 {
+  internal  {
+    frame = "728 462 136 64"
+    moduleGroupName = "Remove outside"
+    windows  {
+      window _default {
+        geometry = "860 538 217 64"
+        sizeHint = "215 64"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Combine_Regions
+    function = Max
+    outputImageSize = AdaptOutputImageSize
+    constant = 0
+    autoReplicate = FALSE
+  }
+}
+module RegionGrowing {
+  internal  {
+    frame = "808 542 120 64"
+    moduleGroupName = "Remove outside"
+    windows  {
+      window _default {
+        geometry = "1034 178 573 583"
+        sizeHint = "573 583"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Back_Corner
+    autoUpdateMode = AutoUpdate
+    lowerThreshold = 0.95
+    upperThreshold = 1.05
+    enableAutoThresholdInterval = TRUE
+    basicNeighborhoodType = BNBH_3D_6_XYZ
+    extendedNeighborhoodType = ENBH_2D_4_XY
+    useAdditionalSeed = TRUE
+    additionalSeed = "0 0 0 0 0 0"
+    additionalSeedType = 0
+    additionalSeedCoordSystem = VoxelCoordinates
+    initStackSizeTweak = 0.100000001490116
+    prohibitInputScalingTweak = FALSE
+    incrementalUpdateMode = Smart
+    useExtendedNBH = FALSE
+    calcBoundaryOverlap = FALSE
+    unitType = UnitTypeGrayValue
+    internalAccuracy = Auto
+    autoUpdateUnitType = FALSE
+    stretchOutputOverTime = FALSE
+    showPartialResults = FALSE
+    acceptedMarkerType = -1
+    autoSelectHigherCoords = TRUE
+    cCoord = 0
+    uCoord = 0
+    posFillValue = -1
+    negFillValue = 0
+    invertResult = FALSE
+    showOuterBoundariesOnly = FALSE
+    upperVolumeLimit_ml = 100
+    enableUpperVolumeLimit = FALSE
+    autoThresholdIntervalSizeInPercent = 5
+  }
+}
+module Calculator {
+  internal  {
+    frame = "241 637 96 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "97 238 700 662"
+        sizeHint = "700 650"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Calculator1
+    exp1 = i1-1
+    exp2 = i2-1
+    exp3 = (i1/2)-10
+    exp4 = ""
+    exp5 = ""
+    exp6 = ""
+    exp7 = ""
+    exp8 = ""
+    i1 = 512
+    i2 = 512
+    i3 = 0
+    i4 = 0
+    i5 = 0
+    i6 = 0
+    d1 = 0
+    d2 = 0
+    d3 = 0
+    d4 = 0
+    d5 = 0
+    d6 = 0
+    d7 = 0
+    d8 = 0
+    d9 = 0
+    d10 = 0
+    d11 = 0
+    d12 = 0
+    v1 = "0 0 0"
+    v2 = "0 0 0"
+    v3 = "0 0 0"
+    v4 = "0 0 0"
+    v5 = "0 0 0"
+    v6 = "0 0 0"
+    domainErrorHandling = Nothing
+    applyMode = AutoApply
+    exp1Comment = ""
+    exp2Comment = ""
+    exp3Comment = ""
+    exp4Comment = ""
+    exp5Comment = ""
+    exp6Comment = ""
+    exp7Comment = ""
+    exp8Comment = ""
+    scalarVariablesComment = ""
+    vectorVariablesComment = ""
+    resultVector1_x = 0
+    resultVector1_y = 0
+    resultVector1_z = 0
+    resultVector2_x = 0
+    resultVector2_y = 0
+    resultVector2_z = 0
+    resultVector3_x = 0
+    resultVector3_y = 0
+    resultVector3_z = 0
+    resultVector4_x = 0
+    resultVector4_y = 0
+    resultVector4_z = 0
+    resultVector5_x = 0
+    resultVector5_y = 0
+    resultVector5_z = 0
+    resultVector6_x = 0
+    resultVector6_y = 0
+    resultVector6_z = 0
+    resultVector7_x = 0
+    resultVector7_y = 0
+    resultVector7_z = 0
+    resultVector8_x = 0
+    resultVector8_y = 0
+    resultVector8_z = 0
+  }
+}
+module StringUtils {
+  internal  {
+    frame = "493 569 152 64"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "782 405 370 331"
+        sizeHint = "370 331"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Back_Corner_Position
+    operationType = Concatenate
+    string1 = 511
+    string2 = 511
+    string3 = ""
+    string4 = ""
+    string5 = ""
+    string6 = ""
+    stringPrefix = [
+    stringPostfix = ]
+    toggle1 = TRUE
+    toggle2 = TRUE
+    toggle3 = FALSE
+    toggle4 = FALSE
+    toggle5 = FALSE
+    toggle6 = FALSE
+    togglePrefix = FALSE
+    togglePostfix = FALSE
+    separator = ""
+    selectSeparator = 1
+    toggleIgnoreCase = FALSE
+    inPos1 = 0
+    inPos2 = 0
+  }
+}
+module Info {
+  internal  {
+    frame = "241 709 64 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "796 292 564 375"
+        sizeHint = "564 375"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Info1
+  }
+}
+module StringUtils {
+  internal  {
+    frame = "665 -3 96 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "1241 331 370 331"
+        sizeHint = "370 331"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = StringUtils1
+    operationType = Concatenate
+    string1 = $(NETWORK)/output/
+    string2 = 1.3.6.1.4.1.14519.5.2.1.6279.6001.970264865033574190975654369557.mhd
+    string3 = ""
+    string4 = ""
+    string5 = ""
+    string6 = ""
+    stringPrefix = [
+    stringPostfix = ]
+    toggle1 = TRUE
+    toggle2 = TRUE
+    toggle3 = FALSE
+    toggle4 = FALSE
+    toggle5 = FALSE
+    toggle6 = FALSE
+    togglePrefix = FALSE
+    togglePostfix = FALSE
+    separator = ""
+    selectSeparator = 0
+    toggleIgnoreCase = FALSE
+    inPos1 = 0
+    inPos2 = 0
+  }
+}
+module StringUtils {
+  internal  {
+    frame = "669 69 88 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "540 492 234 204"
+        sizeHint = "234 204"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = StringUtils
+    operationType = Substring
+    string1 = $(NETWORK)/1.3.6.1.4.1.14519.5.2.1.6279.6001.970264865033574190975654369557.mhd
+    string2 = ""
+    string3 = ""
+    string4 = ""
+    string5 = ""
+    string6 = ""
+    stringPrefix = [
+    stringPostfix = ]
+    toggle1 = TRUE
+    toggle2 = TRUE
+    toggle3 = FALSE
+    toggle4 = FALSE
+    toggle5 = FALSE
+    toggle6 = FALSE
+    togglePrefix = FALSE
+    togglePostfix = FALSE
+    separator = ""
+    selectSeparator = 0
+    toggleIgnoreCase = FALSE
+    inPos1 = 11
+    inPos2 = 10000
+  }
+}
+module itkImageFileWriter {
+  internal  {
+    frame = "897 -499 128 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "157 314 307 403"
+        sizeHint = "256 403"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = itkImageFileWriter
+    useCompression = TRUE
+    correctSubVoxelShift = FALSE
+    forceDirectionCosineWrite = TRUE
+    outputVoxelType = int8
+    info = "File saved successfully"
+    unresolvedFileName = $(NETWORK)/output/1.3.6.1.4.1.14519.5.2.1.6279.6001.970264865033574190975654369557.mhd
+  }
+}
+module Arithmetic2 {
+  internal  {
+    frame = "965 -326 112 64"
+    moduleGroupName = "Lung fill"
+    windows  {
+      window _default {
+        geometry = "860 538 217 64"
+        sizeHint = "215 64"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Fill_lungs_add
+    function = Add
+    outputImageSize = AdaptOutputImageSize
+    constant = 0
+    autoReplicate = FALSE
+  }
+}
+module ConnectedComponents {
+  internal  {
+    frame = "1117 -230 160 64"
+    moduleGroupName = "Lung fill"
+    windows  {
+      window _default {
+        geometry = "54 237 579 509"
+        sizeHint = "448 509"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = 2D
+    autoUpdate = TRUE
+    useAdditionalSeed = FALSE
+    additionalSeed = "0 0 0 0 0 0"
+    additionalSeedType = 0
+    additionalSeedCoordSystem = VoxelCoordinates
+    clusterMode = IdenticalIntensities
+    similarityToleranceIntensities = 0
+    similarityToleranceVectors = 0.98
+    outputLargestClusterOnEachSlice = TRUE
+    fillValue = 0
+    originalObject = FALSE
+    objectValue = 1
+    minClusterSize = 0
+    maxClusterSize = -1
+    clusterSizeInterpretation = ml
+    invertClusterSelection = FALSE
+    invertLargestCluster = TRUE
+    useBackgroundValue = TRUE
+    backgroundValue = 1
+    neighborhoodType = NBH_2D_4_XY
+    useMask = FALSE
+  }
+}
+module itkImageFileReader {
+  internal  {
+    frame = "197 821 136 56"
+    moduleGroupName = ""
+    windows  {
+      window _default {
+        geometry = "750 105 299 395"
+        sizeHint = "299 395"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = itkImageFileReader
+    fileDataType = int16
+    autoDetermineDataType = FALSE
+    correctSubVoxelShift = FALSE
+    fileDimension = 3
+    info = "Loading okay."
+    numDims = 3
+    fileType = Binary
+    componentType = int16
+    pixelType = SCALAR
+    loaderType = MetaImageIO
+    outputMetaDataStr = "ITK_InputFilterName : MetaImageIO
+"
+    unresolvedFileName = $(NETWORK)/1.3.6.1.4.1.14519.5.2.1.6279.6001.970264865033574190975654369557.mhd
+  }
+}
+module OrthoView2D {
+  internal  {
+    frame = "1176 666 120 56"
+    moduleGroupName = "Remove outside"
+    windows  {
+      window _default {
+        geometry = "733 134 400 430"
+        sizeHint = "400 430"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = OrthoView2D3
+    inventorInputOn = TRUE
+    inventorOutputOn = FALSE
+    synchronizePosition = TRUE
+    layout = LAYOUT_CUBE_EQUAL
+    filterMode = FILTER_LINEAR
+    synchronizeZoom = TRUE
+    synchronizePanning = FALSE
+    useGlobalInputImage = TRUE
+    snapToCenter = FALSE
+    alternCubeLayout = FALSE
+    timePoint = 0
+    useManagedInteraction = FALSE
+    enableSlicing = TRUE
+    borderOn = TRUE
+    borderColor = "0.899999976158142 0.899999976158142 0.899999976158142"
+    grayWidth = 1
+    grayCenter = 0.5
+    annotationOn = TRUE
+    annotationSizeMode = ANNO_SHOW_DETAILED
+    annotationFontSize = ANNO_SIZE_AUTO
+    valueHighPrecision = TRUE
+    annoCoords = Voxel
+    showCurrentPos = TRUE
+    worldPosition = "49.6566276550293 -128.985748291016 -209.595001220703"
+    coloredMode = FALSE
+    hiResRendering = TRUE
+  }
+}
+module View3D {
+  internal  {
+    frame = "1149 -29 144 56"
+    moduleGroupName = "Lung selection"
+    windows  {
+      window _default {
+        geometry = "351 247 939 645"
+        sizeHint = "939 645"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = View3D1
+    autoViewAll = TRUE
+    inventorInputOn = TRUE
+    inventorOutputOn = FALSE
+    lutType = Ramp
+    currentTimePoint = 0
+    staticSamplingRate = 1
+    quality = 1
+    lutEditorColorPoints = "[ 0 0 0 0, 4095 1 1 1 ]"
+    lutEditorAlphaPoints = "[ 0 0, 4095 1 ]"
+    lutEditorRelativeLut = FALSE
+    lutEditorColorInterpolation = InterpolateRGB
+    lutEditorAlphaFactor = 1
+    orientationProjectionType = PERSPECTIVE
+    orientationLocation = LOWER_RIGHT
+    orientationOn = TRUE
+    orientationModel = CUBE
+    greyCenter = 0.495000004768372
+    greyWidth = 0.58499986
+    alphaFactor = 1
+    colorFactor = "1 1 1"
+    camType = TRUE
+    camPosition = "-14.5694513320923 -634.780151367188 -17.3505554199219"
+    camOrientation = "-0.99859482049942 0.0483518093824387 -0.0216877739876509 4.96145057678223"
+    initialCameraOrientation = CAMERA_KEEP_AS_IS
+    camFar = 881.0271
+    camNear = 479.47745
+    camFocal = 680.05225
+    camHeight = 0.78539801
+    decoration = FALSE
+    hiResRendering = TRUE
+    annotations = TRUE
+    background = TRUE
+    mode = VolumeRendering
+    interactiveQuality = Medium
+  }
+  internalFields  {
+    renderer.gradientQuality = GradientQualityAutomatic
+    renderer.enhancementAlphaMix = 0.25
+    renderer.boundaryEnhancement = FALSE
+    renderer.boundaryEnhancementFactor = 1
+    renderer.boundaryEnhancementExponent = 1
+    renderer.boundaryEnhancementGradientBias = 0
+    renderer.silhouetteEnhancement = FALSE
+    renderer.silhouetteEnhancementExponent = 1
+    renderer.silhouetteEnhancementFactor = 1
+    renderer.toneShading = FALSE
+    renderer.toneShadingWarmColor = "0.67451000213623 0.533333003520966 0.141176000237465"
+    renderer.toneShadingColdColor = "0 0 0.400000005960464"
+    renderer.toneShadingWarmDiffuse = 0.60000002
+    renderer.toneShadingColdDiffuse = 0.2
+    renderer.toneShadingAngle = 45
+    renderer.materialAmbient = 0.60000002
+    renderer.materialDiffuse = 1
+    renderer.materialSpecular = 1
+    renderer.materialSpecularity = 32
+    renderer.light1Enabled = TRUE
+    renderer.light1DiffuseIntensity = 1
+    renderer.light1SpecularIntensity = 1
+    renderer.light1Color = "1 1 1"
+    renderer.light1PolarPhi = 45
+    renderer.light1PolarRho = 0
+    renderer.light2Enabled = FALSE
+    renderer.light2DiffuseIntensity = 1
+    renderer.light2SpecularIntensity = 1
+    renderer.light2Color = "1 1 1"
+    renderer.light2PolarPhi = 0
+    renderer.light2PolarRho = 0
+    renderer.light3Enabled = FALSE
+    renderer.light3DiffuseIntensity = 1
+    renderer.light3SpecularIntensity = 1
+    renderer.light3Color = "1 1 1"
+    renderer.light3PolarPhi = -45
+    renderer.light3PolarRho = 0
+    renderer.sizeOutputX = 512
+    renderer.sizeOutputY = 512
+    renderer.sizeOutputZ = 433
+    renderer.subVolumeStartX = 0
+    renderer.subVolumeStartY = 0
+    renderer.subVolumeStartZ = 0
+    renderer.subVolumeEndX = 512
+    renderer.subVolumeEndY = 512
+    renderer.subVolumeEndZ = 433
+    clip.hideGeometry = FALSE
+    clip.on = FALSE
+    clip.left = FALSE
+    clip.right = FALSE
+    clip.top = FALSE
+    clip.bottom = FALSE
+    clip.rear = FALSE
+    clip.front = FALSE
+    clip.translation0 = "1 0 0"
+    clip.translation1 = "-1 0 0"
+    clip.translation2 = "0 1 0"
+    clip.translation3 = "0 -1 0"
+    clip.translation4 = "0 0 1"
+    clip.translation5 = "0 0 -1"
+    clip.rotation0 = "0 0 0.999999940395355 1.57079994678497"
+    clip.rotation1 = "0 0 -0.999999940395355 1.57079994678497"
+    clip.rotation2 = "0 0 -1 3.1415901184082"
+    clip.rotation3 = "0 0 1 0"
+    clip.rotation4 = "-0.999999940395355 0 0 1.57079994678497"
+    clip.rotation5 = "0.999999940395355 0 0 1.57079994678497"
+  }
+}
+module ConnectedComponents {
+  internal  {
+    frame = "957 63 160 64"
+    moduleGroupName = "Lung selection"
+    windows  {
+      window _default {
+        geometry = "285 303 579 509"
+        sizeHint = "448 509"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Select_lung
+    autoUpdate = TRUE
+    useAdditionalSeed = FALSE
+    additionalSeed = "0 0 0 0 0 0"
+    additionalSeedType = 0
+    additionalSeedCoordSystem = VoxelCoordinates
+    clusterMode = IdenticalIntensities
+    similarityToleranceIntensities = 0
+    similarityToleranceVectors = 0.98
+    outputLargestClusterOnEachSlice = FALSE
+    fillValue = 0
+    originalObject = FALSE
+    objectValue = 1
+    minClusterSize = 0
+    maxClusterSize = -1
+    clusterSizeInterpretation = ml
+    invertClusterSelection = FALSE
+    invertLargestCluster = FALSE
+    useBackgroundValue = TRUE
+    backgroundValue = 0
+    neighborhoodType = NBH_3D_6_XYZ
+    useMask = FALSE
+  }
+}
+module Arithmetic2 {
+  internal  {
+    frame = "935 284 128 64"
+    moduleGroupName = "Remove outside"
+    windows  {
+      window _default {
+        geometry = "860 538 217 64"
+        sizeHint = "215 64"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Subtract_outside
+    function = Subtract
+    outputImageSize = AdaptOutputImageSize
+    constant = 0
+    autoReplicate = FALSE
+  }
+}
+module IntervalThreshold {
+  internal  {
+    frame = "888 802 136 56"
+    moduleGroupName = "Remove outside"
+    windows  {
+      window _default {
+        geometry = "365 402 403 380"
+        sizeHint = "403 380"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = IntervalThreshold2
+    lowerType = UserDef
+    innerType = UserDef
+    upperType = UserDef
+    centerWidthSet = FALSE
+    threshCenter = -29150
+    threshWidth = 57700
+    threshMin = -58000
+    threshMax = -300
+    lowerUserValue = 0
+    innerUserValue = 1
+    upperUserValue = 0
+    changeMinMax = TRUE
+    changedMin = -100000
+    changedMax = 100000
+  }
+}
+module RegionGrowing {
+  internal  {
+    frame = "680 542 120 64"
+    moduleGroupName = "Remove outside"
+    windows  {
+      window _default {
+        geometry = "1034 178 573 583"
+        sizeHint = "573 583"
+        wasOpen = no
+      }
+    }
+  }
+  fields  {
+    instanceName = Front
+    autoUpdateMode = AutoUpdate
+    lowerThreshold = 0.95
+    upperThreshold = 1.05
+    enableAutoThresholdInterval = TRUE
+    basicNeighborhoodType = BNBH_3D_6_XYZ
+    extendedNeighborhoodType = ENBH_2D_4_XY
+    useAdditionalSeed = TRUE
+    additionalSeed = "511 511 0 0 0 0"
+    additionalSeedType = 0
+    additionalSeedCoordSystem = VoxelCoordinates
+    initStackSizeTweak = 0.100000001490116
+    prohibitInputScalingTweak = FALSE
+    incrementalUpdateMode = Smart
+    useExtendedNBH = FALSE
+    calcBoundaryOverlap = FALSE
+    unitType = UnitTypeGrayValue
+    internalAccuracy = Auto
+    autoUpdateUnitType = FALSE
+    stretchOutputOverTime = FALSE
+    showPartialResults = FALSE
+    acceptedMarkerType = -1
+    autoSelectHigherCoords = TRUE
+    cCoord = 0
+    uCoord = 0
+    posFillValue = -1
+    negFillValue = 0
+    invertResult = FALSE
+    showOuterBoundariesOnly = FALSE
+    upperVolumeLimit_ml = 100
+    enableUpperVolumeLimit = FALSE
+    autoThresholdIntervalSizeInPercent = 5
+  }
+}
+connections  {
+  View3D2.inImage = Fill_lungs_add.output0
+  View3D5.inImage = 2D.output2
+  CacheView.clearTotalCache = FieldIterator.newValue
+  Combine_Regions2.input0 = Combine_Regions.output0
+  Combine_Regions2.input1 = Arithmetic1.output0
+  Arithmetic1.input0 = Back_Center.output0
+  Arithmetic1.constant = Back_Center_Is_Air.outputValue
+  Back_Center.input0 = IntervalThreshold2.output0
+  Back_Center.additionalSeed = Back_Center_Position.result
+  Back_Center_Position.string1 = Calculator1.resultScalar3
+  Back_Center_Position.string2 = Calculator1.resultScalar2
+  Back_Center_Is_Air.input0 = IntervalThreshold2.output0
+  Back_Center_Is_Air.position = Back_Center_Position.result
+  View3D.inImage = IntervalThreshold2.output0
+  StringUtils3.string2 = FieldIterator.curValue
+  FieldIterator.fieldValues = FileDirectory.fileList
+  OrthoView2D.image = Fill_lungs_add.output0
+  Histogram.input0 = itkImageFileReader.output0
+  SoRenderArea.children = SoDiagram2D.self
+  SoDiagram2D.inCurveList = Histogram.outputHistogramCurve
+  SoDiagram2D.inStylePalette = StylePalette0.outStylePalette
+  View2D1.inImage = Subtract_outside.output0
+  Combine_Regions.input0 = Front.output0
+  Combine_Regions.input1 = Back_Corner.output0
+  Back_Corner.input0 = IntervalThreshold2.output0
+  Calculator1.i1 = Info1.sizeX
+  Calculator1.i2 = Info1.sizeY
+  Back_Corner_Position.string1 = Calculator1.resultScalar1
+  Back_Corner_Position.string2 = Calculator1.resultScalar2
+  Info1.input0 = itkImageFileReader.output0
+  StringUtils1.string2 = StringUtils.result
+  StringUtils.string1 = itkImageFileReader.unresolvedFileName
+  itkImageFileWriter.input0 = Fill_lungs_add.output0
+  itkImageFileWriter.save = FieldIterator.newValue
+  itkImageFileWriter.unresolvedFileName = StringUtils1.result
+  Fill_lungs_add.input0 = Select_lung.output2
+  Fill_lungs_add.input1 = 2D.output2
+  2D.input0 = Select_lung.output2
+  itkImageFileReader.unresolvedFileName = StringUtils3.result
+  OrthoView2D3.image = IntervalThreshold2.output0
+  View3D1.inImage = Select_lung.output2
+  Select_lung.input0 = Subtract_outside.output0
+  Subtract_outside.input0 = Combine_Regions2.output0
+  Subtract_outside.input1 = IntervalThreshold2.output0
+  IntervalThreshold2.input0 = itkImageFileReader.output0
+  Front.input0 = IntervalThreshold2.output0
+  Front.additionalSeed = Back_Corner_Position.result
+}
+networkModel  {
+  parentItems  {
+    0  {
+      MLABNetworkModelItem MLABNetworkModelItemGroup {
+        uniqueId = 99
+        objectName = "Remove outside"
+        parentUniqueId = 0
+        color  {
+          r = 45
+          g = 226
+          b = 226
+          a = 40
+        }
+      }
+      MLABNetworkModelItem MLABNetworkModelItemGroup {
+        uniqueId = 130
+        objectName = "Lung selection"
+        parentUniqueId = 0
+        color  {
+          r = 45
+          g = 226
+          b = 226
+          a = 40
+        }
+      }
+      MLABNetworkModelItem MLABNetworkModelItemGroup {
+        uniqueId = 147
+        objectName = "Lung fill"
+        parentUniqueId = 0
+        color  {
+          r = 45
+          g = 226
+          b = 226
+          a = 40
+        }
+      }
+    }
+  }
+}
