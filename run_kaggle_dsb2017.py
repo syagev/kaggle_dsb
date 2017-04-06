@@ -67,24 +67,24 @@ hyper_param = {
 
 models =[]
 session_id = os.path.basename(path_session)
-# for i in range(0, N_CROSS_VAL):
+#for i in range(0, N_CROSS_VAL):
 
-    # print("*** Training and cross validation {}/{}".format(i + 1, N_CROSS_VAL))
+#    print("*** Training and cross validation {}/{}".format(i + 1, N_CROSS_VAL))
 
-    # # split to training and validation sets
-    # train, val = kaggle.classifier.split_train_val(PATH_TRAIN_LABELS,
-                                                   # seed=int(version, 16) + i)
+#    # split to training and validation sets
+#    train, val = kaggle.classifier.split_train_val(PATH_TRAIN_LABELS,
+#                                                   seed=int(version, 16) + i)
 
-    # path_session_i = os.path.join(path_session, "{}_".format(i) + session_id)
-    # if not os.path.exists(path_session_i):
-        # os.mkdir(path_session_i)
+#    path_session_i = os.path.join(path_session, "{}_".format(i) + session_id)
+#    if not os.path.exists(path_session_i):
+#        os.mkdir(path_session_i)
 
-    # models.append(kaggle.classifier.train_ensemble(
-        # train,
-        # val,
-        # os.path.join(PATH_DATASETS, "stage1_detections_mock.hdf5"),
-        # path_session_i,
-        # hyper_param))
+#    models.append(kaggle.classifier.train_ensemble(
+#        train,
+#        val,
+#        os.path.join(PATH_DATASETS, "stage1_detections.hdf5"),
+#        path_session_i,
+#        hyper_param))
 
 
 # predict on test dir (stage-1 holdout and stage-2)
