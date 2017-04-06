@@ -8,6 +8,7 @@ import blob
 import pickle
 import glob
 import os
+import sys
 import scipy.misc
 from skimage.io import imread
 from skimage import morphology
@@ -19,7 +20,7 @@ from scipy.ndimage.measurements import center_of_mass
 
 import subprocess
 
-import ptvsd
+# import ptvsd
 
 from image_read_write import load_itk_image
 
@@ -29,7 +30,7 @@ THRESHOLD = 225
 
 
 def unet_candidates():
-    cands = glob.glob("/razberry/workspace/dsb_nodule_detection.109fd54/*.png")
+    cands = glob.glob('%s/*.png' % sys.argv[1]) #"/razberry/workspace/dsb_nodule_detection.109fd54/*.png
     #df = pd.DataFrame(columns=['seriesuid','coordX','coordY','coordZ','class'])
     data = []
     imname = ""
@@ -213,11 +214,10 @@ def coords_to_candidates(coords, seriesuid):
 
 if __name__ == "__main__":
 
-    ptvsd.enable_attach(None, address = ('0.0.0.0', 3001))
-    ptvsd.wait_for_attach()
+    # ptvsd.enable_attach(None, address = ('0.0.0.0', 3001))
+    # ptvsd.wait_for_attach()
 
-    work_dir = ("/razberry/workspace/dsb_nodule_cands.%s" % 
-                subprocess.check_output(['git', 'rev-parse', 'HEAD'])[:7])
+    work_dir = sys.argv[2]
     if not os.path.exists(work_dir):
         os.makedirs(work_dir)
 
