@@ -46,13 +46,10 @@ def main():
     print(path_session)
 
     # process (both train and test)
-    """
     kaggle.process.process(PATH_TRAIN_DATA, PATH_TRAIN_PROCESSED)
     kaggle.process.process(PATH_TEST_DATA, PATH_TEST_PROCESSED)
-    """
 
     # detection code is Python2.7 so we execute as an external sub-process
-    """
     base_path = os.path.dirname(__file__)
     
     detect_train_workspace = os.path.join(path_session, 'detections_train')
@@ -70,21 +67,16 @@ def main():
     subprocess.call(['python2', 'candidates.py', detect_test_workspace, path_session],
                     cwd=os.path.join(base_path, 'luna16', 'src', ''))
     test_csv = os.path.join(detect_test_workspace, 'candidates_merged.csv')
-    """
     
-
     # extract crops around candidates (both train and test)
-    """
     path_cands_train = os.path.join(PATH_DATASETS, "candidates_train.hdf5")
     path_cands_test = os.path.join(PATH_DATASETS, "candidates_test.hdf5")
     kaggle.util.extract_candidates(PATH_TRAIN_DATA, train_csv,
                                    path_candidates_train)
     kaggle.util.extract_candidates(PATH_TEST_DATA, test_csv,
                                    path_candidates_test)
-    """
 
     # filter candidates
-    """
     path_detections_train = (os.path.dirname(path_hdf5) + 
                              os.path.splitext(os.path.basename(path_hdf5))[0] +
                              "_filtered.hdf5")
@@ -93,25 +85,26 @@ def main():
                             "_filtered.hdf5")
     model = keras.models.load_model(MODEL_DETECTIONS)
     kaggle.detector.filter_hdf5(model, path_cands_train, path_detections_train)
-    kaggle.detector.filter_hdf5(model, path_cands_test, path_detections_test)
-    """
-    path_cands_train = "/razberry/datasets/kaggle-dsb2017/stage1_detections_full.hdf5"
-    path_detections_train = "/razberry/datasets/kaggle-dsb2017/stage1_detections_full_filtered.hdf5"
-    #model = keras.models.load_model(MODEL_DETECTIONS)
-    #kaggle.detector.filter_hdf5(model, path_cands_train, path_detections_train)
-    
+    kaggle.detector.filter_hdf5(model, path_cands_test, path_detections_test)  
     
     # train an ensemble of classifiers
     hyper_param = {
         # optimization
-        "epochs": 10,
-        "batch_sz": [1],
-        "optimizers": [keras.optimizers.Adam(1e-4)],
-        "lr_scheduler_param": [(1e-4, 2, 2)],
+        "epochs": 100,
+        "batch_sz": [1, 2, 4, 8, 16],
+        "optimizers": [keras.optimizers.Adam(),
+                       keras.optimizers.SGD(lr=1e-4, momentum=0.9,
+                                            decay=1e-3, nesterov=True)],
+        "lr_scheduler_param": [(1e-3, 2, 2),
+                               (1e-3, 5, 10),
+                               (1e-3, 10, 20),
+                               (1e-4, 2, 10),
+                               (1e-4, 5, 20),
+                               (1e-4, 10, 50)],
         # architecture
-        "dropout_rate": [0.5],
+        "dropout_rate": [0.25, 0.5, 0.75],
         "batch_norm": [False],
-        "pool_type": ["max"]
+        "pool_type": ["max", "mean", "both"]
         }
     models = []
     session_id = os.path.basename(path_session)
@@ -132,25 +125,15 @@ def main():
             path_detections_train,
             path_session_i,
             hyper_param))
-    
-    
-    """
-    # predict on test dir (stage-1 holdout and stage-2)
-    models = kaggle.classifier.load_ensemble("/razberry/workspace/dsb2017.f19632f")
-    test_ids = [os.path.splitext(id)[0] for id in os.listdir(PATH_TRAIN_PROCESSED)]
-    train, val = kaggle.classifier.split_train_val(PATH_TRAIN_LABELS, 1)
-    train_ids = [s[0] for s in train] + [s[0] for s in val]
-    test_ids = list(set(test_ids).difference(train_ids))
-    path_detections_test = path_detections_train
-
-    #test_ids = [os.path.splitext(id)[0] for id in os.listdir(PATH_TEST_PROCESSED)]
+       
+    # predict on test dir
+    test_ids = [os.path.splitext(id)[0] for id in os.listdir(PATH_TEST_PROCESSED)]
     kaggle.classifier.predict_ensemble(
         models,
         path_detections_test,
         test_ids,
         os.path.join(path_session))
-    """
-
+    
 
 
 if __name__ == '__main__':
