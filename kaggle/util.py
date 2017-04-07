@@ -4,10 +4,10 @@ from collections import defaultdict
 import numpy as np
 import os
 
+from kaggle.detector import SZ_CUBE
 
-def extract_detections(path_data, path_csv, path_output):
 
-    CUBE_SZ = 54
+def extract_candidates(path_data, path_csv, path_output):
 
     # parse the detections csv
     with open(path_csv, "r") as f:
@@ -39,7 +39,7 @@ def extract_detections(path_data, path_csv, path_output):
                     
                     ct_scan = np.load(os.path.join(path_data, 
                                                    "{}.npy".format(id_)))
-                    crops = np.zeros((CUBE_SZ, CUBE_SZ, CUBE_SZ, len(coords)))
+                    crops = np.zeros((SZ_CUBE, SZ_CUBE, SZ_CUBE, len(coords)))
 
                     # pad ct_scan and crop
                     i_counter += 1
@@ -47,7 +47,7 @@ def extract_detections(path_data, path_csv, path_output):
                         print("*** extracting {}/{}" \
                             .format(i_counter, n_counter))
                     ct_scan_shape = ct_scan.shape
-                    ct_scan = np.pad(ct_scan, CUBE_SZ, "constant")
+                    ct_scan = np.pad(ct_scan, SZ_CUBE, "constant")
                     for i, xyz in enumerate(coords):
                         
                         # fix offset in x,y (detections in 512x512 window)
@@ -57,9 +57,9 @@ def extract_detections(path_data, path_csv, path_output):
                     
                         try:
                             crops[:, :, :, i] = ct_scan[
-                                xyz[2] + CUBE_SZ : xyz[2] + 2 * CUBE_SZ,
-                                xyz[0] + CUBE_SZ : xyz[0] + 2 * CUBE_SZ,
-                                xyz[1] + CUBE_SZ : xyz[1] + 2 * CUBE_SZ]
+                                xyz[2] + SZ_CUBE : xyz[2] + 2 * SZ_CUBE,
+                                xyz[0] + SZ_CUBE : xyz[0] + 2 * SZ_CUBE,
+                                xyz[1] + SZ_CUBE : xyz[1] + 2 * SZ_CUBE]
 
                         
                         except ValueError:

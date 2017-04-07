@@ -4,11 +4,12 @@ import subprocess
 import csv
 import os
 
-import keras.optimizers
+import keras
 
 import kaggle.classifier
 import kaggle.util
 import kaggle.process
+import kaggle.detector
 
 # import ptvsd
 # ptvsd.enable_attach(None, address=('0.0.0.0', 3001))
@@ -29,6 +30,7 @@ PATH_DATASETS = "/razberry/datasets/kaggle-dsb2017"
 PATH_WORKSPACE = "/razberry/workspace"
 
 # parameters
+MODEL_DETECTIONS = "/razberry/workspace/luna2016/19cf7d1/unet_19cf7d1.hdf5"
 N_CROSS_VAL = 0
 
 
@@ -69,15 +71,26 @@ def main():
     test_csv = os.path.join(detect_test_workspace, 'candidates_merged.csv')
     
 
-    # extract crops around detections (both train and test)
+    # extract crops around candidates (both train and test)
+    path_cands_train = os.path.join(PATH_DATASETS, "candidates_train.hdf5")
+    path_cands_test = os.path.join(PATH_DATASETS, "candidates_test.hdf5")
     """
-    kaggle.util.extract_detections(PATH_TRAIN_DATA, train_csv,
-                                os.path.join(PATH_DATASETS,
-                                                "detections_train.hdf5"))
-    kaggle.util.extract_detections(PATH_TEST_DATA, test_csv,
-                                os.path.join(PATH_DATASETS,
-                                                "detections_test.hdf5"))
+    kaggle.util.extract_candidates(PATH_TRAIN_DATA, train_csv,
+                                   path_candidates_train)
+    kaggle.util.extract_candidates(PATH_TEST_DATA, test_csv,
+                                   path_candidates_test)
     """
+
+    # filter candidates
+    path_detections_train = (os.path.dirname(path_hdf5) + 
+                             os.path.splitext(os.path.basename(path_hdf5))[0] +
+                             "_filtered.hdf5")
+    path_detections_test = (os.path.dirname(path_hdf5) + 
+                            os.path.splitext(os.path.basename(path_hdf5))[0] +
+                            "_filtered.hdf5")
+    model = keras.models.load_model(MODEL_DETECTIONS)
+    kaggle.detector.filter_hdf5(model, path_cands_train, path_detections_train)
+    kaggle.detector.filter_hdf5(model, path_cands_test, path_detections_test)
 
     # train an ensemble of classifiers
     hyper_param = {
@@ -95,7 +108,7 @@ def main():
     models = []
     session_id = os.path.basename(path_session)
     for i in range(0, N_CROSS_VAL):
-        print("*** Training and cross validation {}/{}".format(i + 1, N_CROSS_VAL))
+        print("*** Training cross validation {}/{}".format(i + 1, N_CROSS_VAL))
 
         # split to training and validation sets
         train, val = kaggle.classifier.split_train_val(PATH_TRAIN_LABELS,
@@ -108,7 +121,7 @@ def main():
         models.append(kaggle.classifier.train_ensemble(
             train,
             val,
-            os.path.join(PATH_DATASETS, "stage1_detections.hdf5"),
+            path_detections_train,
             path_session_i,
             hyper_param))
 
@@ -118,7 +131,7 @@ def main():
     test_ids = [os.path.splitext(id)[0] for id in os.listdir(PATH_TEST_PROCESSED)]
     kaggle.classifier.predict_ensemble(
         models,
-        os.path.join(PATH_DATASETS, "stage1_detections.hdf5"),
+        path_detections_test,
         test_ids,
         os.path.join(path_session))
 
