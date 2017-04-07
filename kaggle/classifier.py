@@ -195,6 +195,9 @@ def _sample_generator(samples, path_data, batch_sz=8, mode="train"):
         inds_shuffled = np.random.permutation(len(samples))
     elif mode == "predict":
         inds_shuffled = range(0, len(samples))
+
+    # the generator's first yield is the number of steps to cover the set
+    yield int(len(inds_shuffled) / batch_sz)
     
     with h5py.File(path_data, "r") as fh5:
         while True:
@@ -212,7 +215,7 @@ def _sample_generator(samples, path_data, batch_sz=8, mode="train"):
 
             # load the data from file (with augmentation and permutation)
             data = np.zeros((batch_sz, INPUT_SZ, INPUT_SZ, max_sz), np.float32)
-            labels = []
+            labels = np.zeros(batch_sz)
             for i in range(0, batch_sz):
                 
                 # 4D-cube (L, L, L, NUM_SAMPLES)
@@ -235,13 +238,8 @@ def _sample_generator(samples, path_data, batch_sz=8, mode="train"):
                     
                     cube_i = np.dstack(cube_i)
                     data[i, :, :, 0:cube_i.shape[2]] = cube_i
-
                     if mode == "train":
-                        labels.append(samples[inds_shuffled[i]][1])
-                
-                else:
-                    if mode == "train":
-                        labels.append(0)
+                        labels[i] = samples[inds_shuffled[i]][1]
                 
             inds_shuffled = np.delete(inds_shuffled, range(0, batch_sz))
 
@@ -252,9 +250,18 @@ def _sample_generator(samples, path_data, batch_sz=8, mode="train"):
 
             yield output
 
-def train(trainset, valset, path_data, path_session, hyper_param):
+def train(model, gen_train, gen_val, path_session, hyper_param):
     """Execute a single training task.
 
+    Args:
+        model: a compiled model
+        gen_train, gen_val: generators for training and validation, we adopt
+            a convention that the generator's first yield is the number of steps
+            that are required to cover its sample set
+        path_session: /path/to/output
+        hyper_param: dictionary with very few hyper param:
+                        * epochs: number of training epochs
+                        * lr_schedule: a keras.callbacks.LearningRateScheduler
 
     Returns:
         model: /path/to/best_model as measured by validation's loss
@@ -270,16 +277,12 @@ def train(trainset, valset, path_data, path_session, hyper_param):
     
 
     # train
-    model = _get_model(hyper_param["optimizer"],
-                       hyper_param["batch_norm"],
-                       pool_type=hyper_param["pool_type"],
-                       dropout_rate=hyper_param["dropout_rate"])
     history = model.fit_generator(
-        _sample_generator(trainset, path_data, hyper_param["batch_sz"]),
-        steps_per_epoch=int(len(trainset) / hyper_param["batch_sz"]),
+        gen_train,
+        steps_per_epoch=next(gen_train),
         epochs=hyper_param["epochs"],
-        validation_data=_sample_generator(valset, path_data, 2),
-        validation_steps=int(len(valset) / 2),
+        validation_data=gen_val,
+        validation_steps=next(gen_val),
         callbacks=[model_cp, hyper_param["lr_schedule"]],
         verbose=1,
         workers=4)
@@ -414,14 +417,13 @@ def predict_ensemble(models, path_data, test_ids, path_output):
 
                 # predict
                 preds = np.zeros(len(test_ids))
-                for i in range(0, len(test_ids)):
-                    preds[i] = model.predict_generator(
-                        _sample_generator([(id,) for id in test_ids], # req. tuple
-                                          path_data,
-                                          batch_sz=1,
-                                          mode="predict"),
-                        steps = 1)
-                predictions.append(preds)
+                gen_test = _sample_generator([(id,) for id in test_ids],
+                                             path_data, batch_sz=1,
+                                             model="predict")
+                #for i in range(0, len(test_ids)):
+                preds = model.predict_generator(gen_test,
+                                                steps=len(test_ids))
+                predictions.append(np.array(preds))
 
                 # stats about model
                 models_inds.append((i, j))
@@ -495,12 +497,7 @@ def train_ensemble(trainset, valset, path_data, path_session, hyper_param):
                             # prepare the tasks' hyper param
                             hyper_param_ = {
                                 "epochs": hyper_param["epochs"],
-                                "batch_sz": batch_sz,
-                                "optimizer": optimizer,
                                 "lr_schedule": make_lr_scheduler(*lr_param),
-                                "dropout_rate": dropout_rate,
-                                "batch_norm": batch_norm,
-                                "pool_type": pool_type
                                 }
 
                             # task's path
@@ -513,12 +510,14 @@ def train_ensemble(trainset, valset, path_data, path_session, hyper_param):
                                 os.mkdir(path_session_)
 
                             # train
-                            models.append(train(
-                                trainset,
-                                valset,
-                                path_data,
-                                path_session_,
-                                hyper_param_))
+                            model = _get_model(optimizer, batch_norm,
+                                               pool_type=pool_type,
+                                               dropout_rate=dropout_rate)
+                            gen_train = _sample_generator(trainset, path_data,
+                                                          batch_sz)
+                            gen_val = _sample_generator(valset, path_data, 1)
+                            models.append(train(model, gen_train, gen_val,
+                                                path_session_, hyper_param_))
    
     # sort by validation loss
     return models.sort(key=lambda tuple: tuple[1])
