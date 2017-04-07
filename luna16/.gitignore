@@ -61,10 +61,9 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 
-data
+data/*
 images/plot
 submissions
-models
 *.name
 .idea/luna16.iml
 *.xml

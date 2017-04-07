@@ -5,7 +5,7 @@ import numpy as np
 import os
 import skimage.io
 
-import ptvsd
+# import ptvsd
 # ptvsd.enable_attach(None, address = ('0.0.0.0', 3001))
 
 model_folder = '../../models/'
@@ -112,11 +112,10 @@ if __name__ == "__main__":
     #                                         batch_size=batch_size,
     #                                         multiprocess=multiprocess)
     
-    in_pattern = '/razberry/datasets/kaggle-dsb2017/stage1_processed/62099cb774faa70d28d2c5cb1e23527*.npy'
-    filenames = glob(in_pattern)[0:]
+    in_pattern = '%s/*.npy' % sys.argv[3]
+    filenames = glob(in_pattern)
     import subprocess
-    predictions_folder = ('/razberry/workspace/dsb_nodule_detection.%s' % 
-                          subprocess.check_output(['git', 'rev-parse', 'HEAD'])[:7])
+    predictions_folder = sys.argv[4] #'../../data/dsb_nodule_detection'
     batch_size = 4
     gen = KaggleDsbIterator(filenames, batch_size=batch_size)
     
