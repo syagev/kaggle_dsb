@@ -422,7 +422,7 @@ def predict_ensemble(models, path_data, test_ids, path_output):
                                              model="predict")
                 #for i in range(0, len(test_ids)):
                 preds = model.predict_generator(gen_test,
-                                                steps=len(test_ids))
+                                                steps=next(gen_test))
                 predictions.append(np.array(preds))
 
                 # stats about model
