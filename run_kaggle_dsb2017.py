@@ -11,10 +11,10 @@ import kaggle.util
 import kaggle.process
 import kaggle.detector
 
-# import ptvsd
-# ptvsd.enable_attach(None, address=('0.0.0.0', 3001))
-# print("waiting for attach.")
-# ptvsd.wait_for_attach()
+#import ptvsd
+#ptvsd.enable_attach(None, address=('0.0.0.0', 3000))
+#print("waiting for attach.")
+#ptvsd.wait_for_attach()
 
 # paths to raw data
 PATH_TRAIN_DATA = "/path/to/training_data"
@@ -22,7 +22,7 @@ PATH_TEST_DATA = "/path/to/test/data"
 PATH_TRAIN_LABELS = "/razberry/datasets/kaggle-dsb2017/stage1_labels.csv"
 
 # paths to processed data
-PATH_TRAIN_PROCESSED = "/path/to/train_proc"
+PATH_TRAIN_PROCESSED = "/razberry/datasets/kaggle-dsb2017/stage1_processed"
 PATH_TEST_PROCESSED = "/razberry/datasets/kaggle-dsb2017/stage1_processed_val"
 
 # other paths
@@ -31,7 +31,7 @@ PATH_WORKSPACE = "/razberry/workspace"
 
 # parameters
 MODEL_DETECTIONS = "/razberry/workspace/luna2016/19cf7d1/unet_19cf7d1.hdf5"
-N_CROSS_VAL = 0
+N_CROSS_VAL = 10
 
 
 def main():
@@ -52,6 +52,7 @@ def main():
     """
 
     # detection code is Python2.7 so we execute as an external sub-process
+    """
     base_path = os.path.dirname(__file__)
     
     detect_train_workspace = os.path.join(path_session, 'detections_train')
@@ -69,12 +70,13 @@ def main():
     subprocess.call(['python2', 'candidates.py', detect_test_workspace, path_session],
                     cwd=os.path.join(base_path, 'luna16', 'src', ''))
     test_csv = os.path.join(detect_test_workspace, 'candidates_merged.csv')
+    """
     
 
     # extract crops around candidates (both train and test)
+    """
     path_cands_train = os.path.join(PATH_DATASETS, "candidates_train.hdf5")
     path_cands_test = os.path.join(PATH_DATASETS, "candidates_test.hdf5")
-    """
     kaggle.util.extract_candidates(PATH_TRAIN_DATA, train_csv,
                                    path_candidates_train)
     kaggle.util.extract_candidates(PATH_TEST_DATA, test_csv,
@@ -82,6 +84,7 @@ def main():
     """
 
     # filter candidates
+    """
     path_detections_train = (os.path.dirname(path_hdf5) + 
                              os.path.splitext(os.path.basename(path_hdf5))[0] +
                              "_filtered.hdf5")
@@ -91,20 +94,25 @@ def main():
     model = keras.models.load_model(MODEL_DETECTIONS)
     kaggle.detector.filter_hdf5(model, path_cands_train, path_detections_train)
     kaggle.detector.filter_hdf5(model, path_cands_test, path_detections_test)
-
+    """
+    path_cands_train = "/razberry/datasets/kaggle-dsb2017/stage1_detections_full.hdf5"
+    path_detections_train = "/razberry/datasets/kaggle-dsb2017/stage1_detections_full_filtered.hdf5"
+    #model = keras.models.load_model(MODEL_DETECTIONS)
+    #kaggle.detector.filter_hdf5(model, path_cands_train, path_detections_train)
+    
+    
     # train an ensemble of classifiers
     hyper_param = {
         # optimization
-        "epochs": 2,
-        "batch_sz": [3],
+        "epochs": 10,
+        "batch_sz": [1],
         "optimizers": [keras.optimizers.Adam(1e-4)],
-        "lr_scheduler_param": [(1e-4, 5, 10)],
+        "lr_scheduler_param": [(1e-4, 2, 2)],
         # architecture
         "dropout_rate": [0.5],
         "batch_norm": [False],
-        "pool_type": ["max", "mean"]
+        "pool_type": ["max"]
         }
-
     models = []
     session_id = os.path.basename(path_session)
     for i in range(0, N_CROSS_VAL):
@@ -124,16 +132,25 @@ def main():
             path_detections_train,
             path_session_i,
             hyper_param))
-
-
+    
+    
+    """
     # predict on test dir (stage-1 holdout and stage-2)
-    models = kaggle.classifier.load_ensemble("/razberry/workspace/dsb2017.bfa827b")
-    test_ids = [os.path.splitext(id)[0] for id in os.listdir(PATH_TEST_PROCESSED)]
+    models = kaggle.classifier.load_ensemble("/razberry/workspace/dsb2017.f19632f")
+    test_ids = [os.path.splitext(id)[0] for id in os.listdir(PATH_TRAIN_PROCESSED)]
+    train, val = kaggle.classifier.split_train_val(PATH_TRAIN_LABELS, 1)
+    train_ids = [s[0] for s in train] + [s[0] for s in val]
+    test_ids = list(set(test_ids).difference(train_ids))
+    path_detections_test = path_detections_train
+
+    #test_ids = [os.path.splitext(id)[0] for id in os.listdir(PATH_TEST_PROCESSED)]
     kaggle.classifier.predict_ensemble(
         models,
         path_detections_test,
         test_ids,
         os.path.join(path_session))
+    """
+
 
 
 if __name__ == '__main__':

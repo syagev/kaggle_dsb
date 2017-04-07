@@ -29,7 +29,6 @@ def extract_candidates(path_data, path_csv, path_output):
         with h5py.File(path_output, "w") as f_h5:
             for id, coords in detections.items():
 
-            # load CT scan (ct_scan is [z, x, y])
                 try:
 
                     # detections.csv seriesuid string is missing chars
@@ -37,6 +36,7 @@ def extract_candidates(path_data, path_csv, path_output):
                     assert(len(file_id) == 1)
                     id_ = os.path.splitext(file_id[0])[0]
                     
+                    # load CT scan (ct_scan is [z, x, y])
                     ct_scan = np.load(os.path.join(path_data, 
                                                    "{}.npy".format(id_)))
                     crops = np.zeros((SZ_CUBE, SZ_CUBE, SZ_CUBE, len(coords)))
@@ -52,8 +52,9 @@ def extract_candidates(path_data, path_csv, path_output):
                         
                         # fix offset in x,y (detections in 512x512 window)
                         xyz = list(xyz)
-                        xyz[0] = xyz[0] - int((512-ct_scan_shape[1])/2)
-                        xyz[1] = xyz[1] - int((512-ct_scan_shape[2])/2)
+                        xyz = [xyz[1], xyz[0], xyz[2]]
+                        xyz[0] = xyz[0] - int((324-ct_scan_shape[1])/2)
+                        xyz[1] = xyz[1] - int((324-ct_scan_shape[2])/2)
                     
                         try:
                             crops[:, :, :, i] = ct_scan[
@@ -61,7 +62,6 @@ def extract_candidates(path_data, path_csv, path_output):
                                 xyz[0] + SZ_CUBE : xyz[0] + 2 * SZ_CUBE,
                                 xyz[1] + SZ_CUBE : xyz[1] + 2 * SZ_CUBE]
 
-                        
                         except ValueError:
                             print("*** ERROR in {}".format(i_counter))
                             log_file.write("Error in {}, shape: {}, xyz: {}\n" \

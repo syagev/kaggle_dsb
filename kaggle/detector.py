@@ -300,7 +300,7 @@ def train_detector(path_data, path_cand_csv, path_session):
 
 #---------------- predict on new data
 
-def filter_hdf5(model, path_hdf5, path_output, threshold=0.4):
+def filter_hdf5(model, path_hdf5, path_output, threshold=0.03, bg_val=0):
     """Run predictions on hdf5 input file.
 
     Args:
@@ -308,6 +308,7 @@ def filter_hdf5(model, path_hdf5, path_output, threshold=0.4):
         path_hdf5: path/to/candidates.hdf5
         path_output: save detections to this file
         threshold: keep candidates above this threshold
+        bg_val: value of background pixels (kaggle 0, luna probably < -1000)
     """
 
     n_input = 0
@@ -329,24 +330,35 @@ def filter_hdf5(model, path_hdf5, path_output, threshold=0.4):
 
                 # prepare the batch
                 data = np.zeros((cube_4d_in.shape[-1], INPUT_SZ, INPUT_SZ,
-                                INPUT_SZ, 1), dtype=np.float32)
+                                N_SLICES, 1), dtype=np.float32)
+
+                # set the background pixels as expected by the classifier
+                if (bg_val == 0):
+                    # -1000 is lower threshold for _normalize_hu
+                    data[data == 0] = -2000
+
                 for i in range(0, cube_4d_in.shape[-1]):
                     cube = cube_4d_in[:, :, :, i]
                     cube = cube[crop_offset:crop_offset + INPUT_SZ,
                                 crop_offset:crop_offset + INPUT_SZ,
                                 crop_offset:crop_offset + INPUT_SZ]
-                    data[i, :, :, :, 1] =  _normalize_hu(_slice_cube(cube))
+                    cube = cube.transpose(0, 2, 1)
+                    data[i, :, :, :, 0] =  _normalize_hu(_slice_cube(cube))
 
                 # predict
-                predictions = model.predict(data, batch_size=8)
-                vb = predictions >= threshold
+                predictions = model.predict(data)
+                vb = (predictions >= threshold).flatten()
                 n_filtered += sum(vb)
 
+                #print(id, max(predictions), sum(vb))
+
                 # write to output file
-                f_out.create_dataset(id,
-                                     shape=(SZ_CUBE, SZ_CUBE, SZ_CUBE, sum(vb)),
-                                     dtype=np.int16,
-                                     data=cube_4d_in[:, :, :, vb])
+                if sum(vb) > 0:
+                    f_out.create_dataset(id,
+                                         shape=(SZ_CUBE, SZ_CUBE,
+                                                SZ_CUBE, sum(vb)),
+                                         dtype=np.int16,
+                                         data=cube_4d_in[:, :, :, vb])
             
     print("DONE")
     print("Input candidates: {}".format(n_input))

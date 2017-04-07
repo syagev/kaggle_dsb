@@ -17,8 +17,8 @@ import sys
 
 INPUT_SZ = 48
 N_SLICES = 9
-# TODO: check with our initialized models!
 PATH_UNET = "/home/omer/unet.hdf5"
+#PATH_UNET = "/razberry/workspace/luna2016/19cf7d1/unet_19cf7d1.hdf5"
 
 
 
@@ -68,13 +68,6 @@ def _get_model(optimizer, do_batch_norm, pool_type="max", dropout_rate=0.5):
     pool5 = MaxPool3D(pool_size=(3, 3, 1))(conv5)
 
     # in: (B, 1, 1, N_DETECTIONS, 512)
-    # # --- ugly fix, see https://github.com/fchollet/keras/issues/4609
-    # def K_mean(x, **arguments):
-        # from keras import backend as K
-        # return K.mean(x, **arguments)
-    # def K_max(x, **arguments):
-        # from keras import backend as K
-        # return K.max(x, **arguments)
     maxpool_det = Lambda((lambda x: K.max(x, axis=3)))(pool5)
     meanpool_det = Lambda((lambda x: K.mean(x, axis=3)))(pool5)
     if pool_type == "both":
@@ -89,9 +82,8 @@ def _get_model(optimizer, do_batch_norm, pool_type="max", dropout_rate=0.5):
     # in: (B, 512) for "max"/"mean" pool and (B, 1024) for "both"
     dropout = Dropout(dropout_rate)(pool_det)
     if pool_type == "both":
-        fc = Dense(32, activation="sigmoid")(dropout)
-        dropout = Dropout(dropout_rate)(fc)
-        fc = Dense(1, activation="sigmoid")(dropout)
+        fc = Dense(4, activation="relu")(dropout)
+        fc = Dense(1, activation="sigmoid")(fc)
     else:
         fc = Dense(1, activation="sigmoid")(dropout)
 
@@ -153,7 +145,7 @@ def _normalize_hu(image):
     image = (image - MIN_BOUND) / (MAX_BOUND - MIN_BOUND)
     image[image > 1] = 1.
     image[image < 0] = 0.
-    return (image - PIXEL_MEAN)
+    return (image - PIXEL_MEAN).astype(np.float32)
 
 class threadsafe_iter:
     """Takes an iterator/generator and makes it thread-safe by
@@ -347,7 +339,7 @@ def make_lr_scheduler(base_lr, decay_rate, epoch_rate):
         if epoch + 1 < epoch_rate:
             lr = base_lr
         else:
-            lr = base_lr / (decay_rate * np.floor(epoch + 1 / rate_epochs))
+            lr = base_lr / (decay_rate * np.floor((epoch + 1) / epoch_rate))
             
         return lr
 
@@ -419,7 +411,7 @@ def predict_ensemble(models, path_data, test_ids, path_output):
                 preds = np.zeros(len(test_ids))
                 gen_test = _sample_generator([(id,) for id in test_ids],
                                              path_data, batch_sz=1,
-                                             model="predict")
+                                             mode="predict")
                 #for i in range(0, len(test_ids)):
                 preds = model.predict_generator(gen_test,
                                                 steps=next(gen_test))
@@ -437,6 +429,7 @@ def predict_ensemble(models, path_data, test_ids, path_output):
             wr = csv.writer(f)
             wr.writerow(("id", "cancer"))
             for id, val in zip(ids, vals):
+                val = min(max(val, 0.01), 0.99)
                 wr.writerow((id, "%.2f" % np.round(val, 2)))
 
     # mean over all predictions
@@ -513,6 +506,27 @@ def train_ensemble(trainset, valset, path_data, path_session, hyper_param):
                             model = _get_model(optimizer, batch_norm,
                                                pool_type=pool_type,
                                                dropout_rate=dropout_rate)
+                            
+                            """
+                            model = keras.models.load_model(PATH_UNET)
+                            # from https://github.com/fchollet/keras/issues/4044
+                            model_json = model.to_json()
+                            with open("model.json", "w") as json_file:
+                                json_file.write(model_json)
+                            model.save_weights("model.h5")
+                            # load json and create model
+                            json_file = open('model.json', 'r')
+                            loaded_model_json = json_file.read()
+                            json_file.close()
+                            loaded_model = keras.models. \
+                                model_from_json(loaded_model_json)
+                            # load weights into new model
+                            loaded_model.load_weights("model.h5")
+                            model.compile(optimizer=optimizer,
+                                          loss="binary_crossentropy",
+                                          metrics=['accuracy'])
+                            """
+                            
                             gen_train = _sample_generator(trainset, path_data,
                                                           batch_sz)
                             gen_val = _sample_generator(valset, path_data, 1)
