@@ -8,6 +8,7 @@ import keras.optimizers
 
 import kaggle.classifier
 import kaggle.util
+import kaggle.process
 
 # import ptvsd
 # ptvsd.enable_attach(None, address=('0.0.0.0', 3001))
@@ -41,7 +42,12 @@ def main():
     if not os.path.exists(path_session):
         os.mkdir(path_session)
     print(path_session)
-    # TODO: process (both train and test)
+
+    # process (both train and test)
+    """
+    kaggle.process.process(PATH_TRAIN_DATA, PATH_TRAIN_PROCESSED)
+    kaggle.process.process(PATH_TEST_DATA, PATH_TEST_PROCESSED)
+    """
 
     # detection code is Python2.7 so we execute as an external sub-process
     base_path = os.path.dirname(__file__)
@@ -63,9 +69,8 @@ def main():
     test_csv = os.path.join(detect_test_workspace, 'candidates_merged.csv')
     
 
-    """
-
     # extract crops around detections (both train and test)
+    """
     kaggle.util.extract_detections(PATH_TRAIN_DATA, train_csv,
                                 os.path.join(PATH_DATASETS,
                                                 "detections_train.hdf5"))

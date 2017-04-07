@@ -11,14 +11,6 @@ import matplotlib.pyplot as plt
 from skimage import measure, morphology
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
-# Some constants 
-INPUT_FOLDER = "/razberry/datasets/kaggle-dsb2017/stage1"
-OUTPUT_FOLDER = "/razberry/datasets/kaggle-dsb2017/stage1_processed"
-patients = os.listdir(INPUT_FOLDER)
-patients.sort()
-
-
-########## functions
 
 # Load the scans in given folder path
 def load_scan(path):
@@ -149,78 +141,36 @@ def segment_lung_mask(image, fill_lung_structures=True):
  
     return binary_image
 
-
-MIN_BOUND = -1000.0
-MAX_BOUND = 400.0
+def process(path_data, path_output):
     
-def normalize(image):
-    image = (image - MIN_BOUND) / (MAX_BOUND - MIN_BOUND)
-    image[image>1] = 1.
-    image[image<0] = 0.
-    return image
+    # get subdirs with dicoms
+    patients = os.listdir(path_data)
+    patients.sort()
 
+    if not os.path.exists(path_output):
+        mkdir(path_output)
 
-
-
-PIXEL_MEAN = 0.25
-
-def zero_center(image):
-    image = image - PIXEL_MEAN
-    return image
-
-
-
-
-##############
-
-
-
-
-#first_patient = load_scan(INPUT_FOLDER + patients[0])
-#first_patient_pixels = get_pixels_hu(first_patient)
-#plt.hist(first_patient_pixels.flatten(), bins=80, color='c')
-#plt.xlabel("Hounsfield Units (HU)")
-#plt.ylabel("Frequency")
-#plt.show()
-
-## Show some slice in the middle
-#plt.imshow(first_patient_pixels[80], cmap=plt.cm.gray)
-#plt.show()
-
-#pix_resampled, spacing = resample(first_patient_pixels, first_patient, [1,1,1])
-#print("Shape before resampling\t", first_patient_pixels.shape)
-#print("Shape after resampling\t", pix_resampled.shape)
-
-##plot_3d(pix_resampled, 400)
-
-#segmented_lungs = segment_lung_mask(pix_resampled, False)
-#segmented_lungs_fill = segment_lung_mask(pix_resampled, True)
-
-
-#plot_3d(segmented_lungs, 0)
-#plot_3d(segmented_lungs_fill, 0)
-#plot_3d(segmented_lungs_fill - segmented_lungs, 0)
-
-for i, patient in enumerate(patients[0:2]):
+    for i, patient in enumerate(patients[i_start:]):
     
-    print("Processing {}/{}\n".format(i + 1, len(patients)))
+        print("Processing {}/{}".format(i_start + i + 1, len(patients)))
 
-    # load dicom series, map to HU
-    dicom_series = load_scan(os.path.join(INPUT_FOLDER, patient))
-    dicom_series_pixels = get_pixels_hu(dicom_series)
+        try:
+            # load dicom series, map to HU
+            dicom_series = load_scan(os.path.join(path_data, patient))
+            dicom_series_pixels = get_pixels_hu(dicom_series)
 
-    # resample
-    pix_resampled, spacing = resample(dicom_series_pixels, dicom_series, [1,1,1])
+            # resample
+            pix_resampled, spacing = resample(dicom_series_pixels,
+                                              dicom_series, [1,1,1])
 
-    # segment
-    segmented_lungs_fill = segment_lung_mask(pix_resampled, True)
+            # segment
+            segmented_lungs_fill = segment_lung_mask(pix_resampled, True)
 
-    # normalize and zero-center - doing that online!
-    #segmented_lungs_fill = normalize(segmented_lungs_fill)
-    #segmented_lungs_fill = zero_center(segmented_lungs_fill)
+            # save
+            pix_resampled = pix_resampled * segmented_lungs_fill
+            np.save(os.path.join(path_output, patient), pix_resampled)
 
-    # save
-    np.save(os.path.join(OUTPUT_FOLDER, patient), segmented_lungs_fill)
+        except:
+            print("Error in {}".format(patient))
 
-
-print("DONE!")
+    print("Done!")
